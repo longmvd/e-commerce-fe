@@ -1,0 +1,30 @@
+$base-padding: 1px; // Set the base padding value
+
+
+// Create padding classes for each direction using a loop
+@for $i from 0 through 100 {
+  $value: $i * $base-padding;
+  .pt-#{$i} {
+    padding-top: $value;
+  }
+  .pr-#{$i} {
+    padding-right: $value;
+  }
+  .pb-#{$i} {
+    padding-bottom: $value;
+  }
+  .pl-#{$i} {
+    padding-left: $value;
+  }
+  .p-#{$i} {
+    padding: $value $value $value $value;
+  }
+  .px-#{$i} {
+    padding-left: $value;
+    padding-right: $value;
+  }
+  .py-#{$i} {
+    padding-top: $value;
+    padding-bottom: $value;
+  }
+}

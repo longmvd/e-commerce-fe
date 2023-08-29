@@ -1,0 +1,30 @@
+$base-margin: 1px; // Set the base margin value
+
+
+// Create margin classes for each direction using a loop
+@for $i from 0 through 100 {
+  $value: $i * $base-margin;
+  .mt-#{$i} {
+    margin-top: $value;
+  }
+  .mr-#{$i} {
+    margin-right: $value;
+  }
+  .mb-#{$i} {
+    margin-bottom: $value;
+  }
+  .ml-#{$i} {
+    margin-left: $value;
+  }
+  .m-#{$i} {
+    margin: $value $value $value $value;
+  }
+  .my-#{$i} {
+    margin-top: $value;
+    margin-bottom: $value;
+  }
+  .mx-#{$i} {
+    margin-left: $value;
+    margin-right: $value;
+  }
+}

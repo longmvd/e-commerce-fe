@@ -1,0 +1,95 @@
+$app-icon: url("@/assets/images/AppIcon.svg");
+$icon-cart: url("@/assets/images/icon-cart.svg");
+@mixin icon(
+  $image-name,
+  $width: 24px,
+  $height: 24px,
+  $color: $color-icon-default,
+  $positionX: 0px,
+  $positionY: 0px,
+  $rotateY: null,
+  $rotateX: null
+) {
+  width: $width;
+  height: $height;
+  -webkit-mask-image: $image-name;
+  -moz-mask-image: $image-name;
+  -ms-mask-image: $image-name;
+  -o-mask-image: $image-name;
+  mask-image: $image-name;
+  -webkit-mask-position: $positionX $positionY;
+  -moz-mask-position: $positionX $positionY;
+  -ms-mask-position: $positionX $positionY;
+  -o-mask-position: $positionX $positionY;
+  mask-position: $positionX $positionY;
+  -webkit-mask-repeat: no-repeat;
+  -moz-mask-repeat: no-repeat;
+  -ms-mask-repeat: no-repeat;
+  -o-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  background-color: $color;
+  @if $rotateY != null {
+    transform: rotateY($rotateY);
+  }
+  @if $rotateX != null {
+    transform: rotateY($rotateX);
+  }
+}
+
+.icon-setting {
+  @include icon($app-icon, 32px, 32px, $positionX: -574px, $positionY: -22px);
+}
+
+.icon-notify {
+  @include icon($app-icon, 24px, 24px, $positionX: -26px, $positionY: -27px);
+}
+
+.icon-account {
+  @include icon($app-icon, 24px, 24px, $positionX: -159px, $positionY: -312px);
+}
+
+.icon-cart {
+  @include icon($icon-cart, 24px, 24px, $positionY: -3px);
+}
+
+.icon-square-check-primary,
+.icon-square-uncheck {
+  @include icon($app-icon, 22px, 24px, $positionX: -512px, $positionY: 2px);
+}
+
+.icon-square-check-primary {
+  background-color: $color-primary;
+}
+
+.icon-chevron-down {
+  @include icon($app-icon, 18px, 18px, $positionX: -363px, $positionY: -3px);
+}
+
+.icon-square-plus {
+  @include icon($app-icon, 25px, 25px, $positionX: -569px, $positionY: -3px);
+}
+
+.icon-square-minus {
+  @include icon($app-icon, 25px, 18px, $positionX: -589px, $positionY: -3px);
+}
+
+.dx-checkbox {
+  &.dx-state-hover {
+    .dx-checkbox-icon {
+      background-color: $color-primary;
+    }
+  }
+}
+
+.dx-checkbox-icon {
+  @include icon($app-icon, 22px, 24px, $positionX: -532px, $positionY: 2px);
+}
+
+.dx-checkbox-checked {
+  .dx-checkbox-icon {
+    @extend .icon-square-check-primary;
+    &::before {
+      content: "";
+    }
+  }
+}

@@ -1,0 +1,23 @@
+
+.dx-dropdowneditor{
+    &.dx-dropdowneditor-active{
+        .dx-dropdowneditor-icon::before {
+            @include rotate(180deg, $x:180deg)
+        }
+    }
+    &-icon::before {
+        content: "";
+        @extend .icon-chevron-down
+    }
+}
+
+.dx-dropdowneditor-button.dx-state-active .dx-dropdowneditor-icon, .dx-dropdowneditor.dx-dropdowneditor-active .dx-dropdowneditor-icon {
+    background-color: transparent;
+}
+
+.dx-treeview-toggle-item-visibility::before{
+    @extend .icon-square-plus
+}
+.dx-treeview-toggle-item-visibility.dx-treeview-toggle-item-visibility-opened::before{
+    @extend .icon-square-minus
+}

@@ -1,0 +1,28 @@
+$height-values: 5 10 15 20 25 30 35 40 45 50 55 60 65 70 75 80 85 90 95 100;
+$positions: relative absolute fixed sticky;
+
+@for $i from 1 through length($positions) {
+  $position: nth($positions, $i);
+  .p-#{$position} {
+    position: $position;
+  }
+}
+
+@for $i from 1 through 300 {
+  @if $i <= 100 {
+    .h-#{$i} {
+      height: #{$i}+'%';
+    }
+    .w-#{$i} {
+      width: #{$i}+'%';
+    }
+  }
+  @if $i >=50{
+    .mh-#{$i} {
+      min-height: #{$i}+'px';
+    }
+    .mw-#{$i} {
+      min-width: #{$i}+'px';
+    }
+  }
+}

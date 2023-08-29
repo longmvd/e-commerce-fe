@@ -1,0 +1,78 @@
+$text-weights: (
+  'thin': 100,
+  'light': 300,
+  'regular': 400,
+  'medium': 500,
+  'semibold': 600,
+  'bold': 700,
+  'extrabold': 800,
+  'black': 900
+);
+
+// define a mixin to apply the text weights
+@mixin font-weight($name) {
+  @if map-has-key($text-weights, $name) {
+    font-weight: map-get($text-weights, $name);
+  } @else {
+    @warn "Invalid font weight: #{$name}";
+  }
+}
+
+// create classes for each text weight
+@each $name, $weight in $text-weights {
+  .fw-#{$name} {
+    @include font-weight($name);
+  }
+}
+
+@each $name, $weight in $text-weights {
+  .text-#{$name} {
+    @include font-weight($name);
+  }
+}
+
+$text-styles: (
+  'title': ( font-size: 2rem, font-weight: 'bold' ),
+  'subtitle': ( font-size: 1.5rem, font-weight: 'semibold' ),
+  'body': ( font-size: 1rem, font-weight: 'regular' ),
+  'caption': ( font-size: 0.8rem, font-weight: 'light' ),
+  // add more text styles here
+);
+
+// define a mixin to apply the text styles
+@mixin text-style($name) {
+  @if map-has-key($text-styles, $name) {
+    $style: map-get($text-styles, $name);
+    font-size: map-get($style, 'font-size');
+    @include font-weight(map-get($style, 'font-weight'));
+    // add more properties as needed
+  } @else {
+    @warn "Invalid text style: #{$name}";
+  }
+}
+
+// create classes for each text style
+@each $name, $style in $text-styles {
+  .text-#{$name} {
+    @include text-style($name);
+  }
+}
+
+// create classes for each font size
+@for $i from 10 through 30 {
+  .fs-#{$i} {
+    font-size: $i + px;
+  }
+}
+
+
+
+.text{
+  &-uppercase {
+    text-transform: uppercase;
+  }
+  &-lowercase {
+    text-transform: lowercase;
+  }
+}
+

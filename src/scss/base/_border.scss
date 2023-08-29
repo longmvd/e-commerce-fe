@@ -1,0 +1,9 @@
+@for $i from 2 through 20 {
+    .br-#{$i}{
+        border-radius: $i + px;
+    }
+}
+
+.br-round{
+    border-radius: 50%;
+}

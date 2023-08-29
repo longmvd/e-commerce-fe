@@ -1,0 +1,44 @@
+.flex {
+    display: flex;
+
+    &-column {
+        flex-direction: column;
+
+        &-reverse {
+            flex-direction: column-reverse;
+        }
+    }
+
+    &-1 {
+        flex: 1;
+    }
+
+    &-center{
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.content {
+    &-center {
+        justify-content: center;
+    }
+
+    &-space-between {
+        justify-content: space-between;
+    }
+
+    &-space-around {
+        justify-content: space-around;
+    }
+}
+
+.items{
+    &-center{
+        align-items: center;
+    }
+}
+
+.d-block{
+    display: block;
+}
