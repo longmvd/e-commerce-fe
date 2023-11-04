@@ -11,7 +11,7 @@
           </h2>
         </div>
         <div>
-          <div class="flex related-tag">
+          <div class="flex related-tag cursor-pointer">
             <div class="related-tag__item" v-for="item in relatedTags">
               {{ item.Text }}
             </div>
@@ -200,6 +200,16 @@ const relatedTags = ref<RelatedTag[]>([
   },
   {
     ID: 2,
+    Url: "abc.com",
+    Text: "Apple Watch",
+  },
+  {
+    ID: 3,
+    Url: "abc.com",
+    Text: "Apple Watch",
+  },
+  {
+    ID: 4,
     Url: "abc.com",
     Text: "Apple Watch",
   },
