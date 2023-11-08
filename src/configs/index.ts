@@ -1,5 +1,5 @@
-import appsettingsDevelopment from "./appsettings.Development.json";
-import appsettingsProduction from "./appsettings.Production.json";
+import appsettingsDevelopment from './appsettings.Development.json';
+import appsettingsProduction from './appsettings.Production.json';
 const settings = {
   development: appsettingsDevelopment,
   production: appsettingsProduction,

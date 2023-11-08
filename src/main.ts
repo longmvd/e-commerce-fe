@@ -1,16 +1,23 @@
-import { createApp, provide } from "vue";
-import App from "./App.vue";
-import i18n from "./i18n";
-import routers from "./routers";
-import Antd from "ant-design-vue";
-import "ant-design-vue/dist/antd.css";
-import '@/scss/index.scss'
+import { createApp } from 'vue';
 
+import socket from '@/plugins/web-socket/web-socket.plugin';
+import '@/scss/index.scss';
+import store from '@/store';
+import Antd from 'ant-design-vue';
+import 'ant-design-vue/dist/antd.css';
+import App from './App.vue';
+import i18n from './i18n';
+import { eventBus } from './plugins/event-bus';
+import routers from './routers';
 const app = createApp(App);
-app.use(i18n)
-.use(Antd)
-.use(routers)
-.provide("_global", {
+app
+  .use(i18n)
+  .use(Antd)
+  .use(routers)
+  .use(store)
+  .use(eventBus)
+  .use(socket)
+  .provide('_global', {
     // setLocale
-  })
-app.mount("#app");
+  });
+app.mount('#app');

@@ -1,30 +1,40 @@
 import appSettings from '@/configs';
+import { SocketEvents } from '@/plugins/event-bus';
+import { Emitter } from 'mitt';
+import { inject } from 'vue';
 
-export function useWebSocket(
-  onMessage: (event: MessageEvent) => any,
-  onOpen: (event: Event) => any,
-  onClose: (event: CloseEvent) => any,
-  onError: (event: Event) => any
-) {
-  const socket = new WebSocket(appSettings.webSocketHost);
+const socket = new WebSocket(appSettings.webSocketHost);
 
-  if (typeof onMessage == 'function') {
-    socket.onmessage = onMessage;
-  }
-
-  if (typeof onOpen == 'function') {
-    socket.onopen = onOpen;
-  }
-
-  if (typeof onClose == 'function') {
-    socket.onclose = onClose;
-  }
-
-  if (typeof onError == 'function') {
-    socket.onerror = onError;
-  }
-
-  return {
-    socket,
+export function useWebSocketInit() {
+  const bus = inject<Emitter<SocketEvents>>('_bus');
+  socket.onmessage = (event) => {
+    bus?.emit('onSocketMessage', event);
   };
+
+  socket.onerror = (event) => {
+    bus?.emit('onSocketError', event);
+  };
+
+  window.addEventListener('beforeunload', () => {
+    socket.close();
+  });
+}
+
+type useWebSocketParam = {
+  handleOnSocketMessage: (event: MessageEvent) => void;
+  handleOnSocketError: (event: Event) => void;
+};
+
+export function useWebSocket({
+  handleOnSocketMessage,
+  handleOnSocketError,
+}: useWebSocketParam) {
+  const eventHandler = inject<Emitter<SocketEvents>>('_bus');
+  if (typeof handleOnSocketMessage === 'function') {
+    eventHandler?.on('onSocketMessage', handleOnSocketMessage);
+  }
+  if (typeof handleOnSocketError === 'function') {
+    eventHandler?.on('onSocketError', handleOnSocketError);
+  }
+  return eventHandler;
 }

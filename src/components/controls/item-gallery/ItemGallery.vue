@@ -12,7 +12,11 @@
         </div>
         <div>
           <div class="flex related-tag cursor-pointer">
-            <div class="related-tag__item" v-for="item in relatedTags">
+            <div
+              class="related-tag__item"
+              v-for="item in relatedTags"
+              @click="handleRelatedTagClick(item)"
+            >
               {{ item.Text }}
             </div>
           </div>
@@ -30,7 +34,7 @@
           </div>
         </template>
         <slot name="items">
-          <div v-for="item in items">
+          <div v-for="item in items" @click="handleItemClick(item)">
             <div
               class="p-relative item-wrapper flex flex-column m-8 p-12 br-12"
             >
@@ -61,15 +65,20 @@
 </template>
 
 <script setup lang="ts">
-import { formatDiscountPercentText } from "@/composable";
-import { RelatedTag } from "@/entities";
-import { Product } from "@/entities/product";
-import { LeftCircleOutlined, RightCircleOutlined } from "@ant-design/icons-vue";
-import { CarouselProps } from "ant-design-vue";
-import { ref } from "vue";
-import { ItemGalleryConfig } from "./index";
+import { formatDiscountPercentText } from '@/composable';
+import { RelatedTag } from '@/entities';
+import { Product } from '@/entities/product';
+import { LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
+import { CarouselProps } from 'ant-design-vue';
+import { computed, ref } from 'vue';
+import { ItemGalleryConfig } from './index';
 const { config } = defineProps<{
-  config?: ItemGalleryConfig;
+  config: ItemGalleryConfig;
+}>();
+
+const emit = defineEmits<{
+  (e: 'itemClick', data: any): void;
+  (e: 'relatedTagClick', data: any): void;
 }>();
 
 const carouselConfig = ref<CarouselProps>({
@@ -105,115 +114,21 @@ const carouselConfig = ref<CarouselProps>({
   ...config,
 });
 
-const items = ref<Product[]>([
-  {
-    ID: 1,
-    ProductName: "Điện thoại IPhone 13 Promax",
-    ImageUrl: "./src/assets/images/14_1_9_2_9.webp",
-    Description: "",
-    Price: 3_000_000,
-    FreeShipping: true,
-    Promotion: "",
-    TradePrice: 3_000_000,
-    Discount: 0.5,
-    Star: 5,
-  },
-  {
-    ID: 1,
-    ProductName: "Điện thoại IPhone 13 Promax",
-    ImageUrl: "./src/assets/images/14_1_9_2_9.webp",
-    Description: "",
-    Price: 3_000_000,
-    FreeShipping: true,
-    Promotion: "",
-    TradePrice: 3_000_000,
-    Discount: 0.5,
-    Star: 5,
-  },
-  {
-    ID: 1,
-    ProductName: "Điện thoại IPhone 13 Promax",
-    ImageUrl: "./src/assets/images/14_1_9_2_9.webp",
-    Description: "",
-    Price: 3_000_000,
-    FreeShipping: true,
-    Promotion: "",
-    TradePrice: 3_000_000,
-    Discount: 0.5,
-    Star: 5,
-  },
-  {
-    ID: 1,
-    ProductName: "Điện thoại IPhone 13 Promax",
-    ImageUrl: "./src/assets/images/14_1_9_2_9.webp",
-    Description: "",
-    Price: 3_000_000,
-    FreeShipping: true,
-    Promotion: "",
-    TradePrice: 3_000_000,
-    Discount: 0.5,
-    Star: 5,
-  },
-  {
-    ID: 1,
-    ProductName: "Điện thoại IPhone 13 Promax",
-    ImageUrl: "./src/assets/images/14_1_9_2_9.webp",
-    Description: "",
-    Price: 3_000_000,
-    FreeShipping: true,
-    Promotion: "",
-    TradePrice: 3_000_000,
-    Discount: 0.5,
-    Star: 5,
-  },
-  {
-    ID: 1,
-    ProductName: "Điện thoại IPhone 13 Promax",
-    ImageUrl: "./src/assets/images/14_1_9_2_9.webp",
-    Description: "",
-    Price: 3_000_000,
-    FreeShipping: true,
-    Promotion: "",
-    TradePrice: 3_000_000,
-    Discount: 0.5,
-    Star: 5,
-  },
-  {
-    ID: 1,
-    ProductName: "Điện thoại IPhone 13 Promax",
-    ImageUrl: "./src/assets/images/14_1_9_2_9.webp",
-    Description: "",
-    Price: 3_000_000,
-    FreeShipping: true,
-    Promotion: "",
-    TradePrice: 3_000_000,
-    Discount: 0.5,
-    Star: 5,
-  },
-]);
+const items = computed<Product[]>(() => config.items);
+const relatedTags = computed<RelatedTag[]>(() => {
+  if (config.relatedTags?.length) {
+    return config.relatedTags;
+  }
+  return [];
+});
 
-const relatedTags = ref<RelatedTag[]>([
-  {
-    ID: 1,
-    Url: "abc.com",
-    Text: "Apple Watch",
-  },
-  {
-    ID: 2,
-    Url: "abc.com",
-    Text: "Apple Watch",
-  },
-  {
-    ID: 3,
-    Url: "abc.com",
-    Text: "Apple Watch",
-  },
-  {
-    ID: 4,
-    Url: "abc.com",
-    Text: "Apple Watch",
-  },
-]);
+function handleItemClick(item: any) {
+  emit('itemClick', item);
+}
+
+function handleRelatedTagClick(tag: RelatedTag) {
+  emit('relatedTagClick', tag);
+}
 </script>
 
 <style lang="scss" scoped>
@@ -292,7 +207,7 @@ const relatedTags = ref<RelatedTag[]>([
     border-radius: 4px 17px 17px 0;
 
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       width: 0;
       height: 0;
