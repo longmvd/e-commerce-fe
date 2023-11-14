@@ -1,5 +1,8 @@
+import { handleError } from '@/composable/http/use-response';
 import { PagingRequest } from '@/entities/paging/paging-request';
+import { AxiosError } from 'axios';
 import api from './base-api-config';
+('@/composable/http/use-response');
 
 export class BaseApi<T> {
   controller: string = '';
@@ -10,27 +13,43 @@ export class BaseApi<T> {
     this.baseApi = api;
   }
 
-  get(path: string) {
-    return this.baseApi.get(this.controller + path);
+  async get(path: string) {
+    try {
+      return await this.baseApi.get(this.controller + path);
+    } catch (err) {
+      return handleError(err as AxiosError);
+    }
   }
 
-  post(path: string, payload: any) {
-    return this.baseApi.post(this.controller + path, payload);
+  async post(path: string, payload: any) {
+    try {
+      return await this.baseApi.post(this.controller + path, payload);
+    } catch (err) {
+      return handleError(err as AxiosError);
+    }
   }
 
-  put(path: string, payload: T) {
-    return this.baseApi.put(this.controller + path, payload);
+  async put(path: string, payload: T) {
+    try {
+      return await this.baseApi.put(this.controller + path, payload);
+    } catch (err) {
+      return handleError(err as AxiosError);
+    }
   }
 
-  patch(path: string, payload: T) {
-    return this.baseApi.patch(this.controller + path, payload);
+  async patch(path: string, payload: T) {
+    try {
+      return await this.baseApi.patch(this.controller + path, payload);
+    } catch (err) {
+      return handleError(err as AxiosError);
+    }
   }
 
-  getPaging(pagingRequest: PagingRequest) {
-    return this.post('/Paging', pagingRequest);
+  async getPaging(pagingRequest: PagingRequest) {
+    return await this.post('/Paging', pagingRequest);
   }
 
-  getById(id: string) {
+  async getById(id: string) {
     return this.get(`/${id}`);
   }
 }

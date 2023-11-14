@@ -24,7 +24,8 @@ const itemGalleryConfig = ref<ItemGalleryConfig>({
     {
       ID: 1,
       ProductName: 'Điện thoại IPhone 13 Promax',
-      ImageUrl: './src/assets/images/14_1_9_2_9.webp',
+      ImageUrl:
+        'http://localhost:5237/api/Images?filename=638353199572289670.png',
       Description: '',
       Price: 3_000_000,
       FreeShipping: true,
@@ -36,7 +37,8 @@ const itemGalleryConfig = ref<ItemGalleryConfig>({
     {
       ID: 1,
       ProductName: 'Điện thoại IPhone 13 Promax',
-      ImageUrl: './src/assets/images/14_1_9_2_9.webp',
+      ImageUrl:
+        'http://localhost:5237/api/Images?filename=638353264067380207.webp',
       Description: '',
       Price: 3_000_000,
       FreeShipping: true,

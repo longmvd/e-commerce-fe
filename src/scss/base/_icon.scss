@@ -1,5 +1,6 @@
 $app-icon: url("@/assets/images/AppIcon.svg");
 $icon-cart: url("@/assets/images/icon-cart.svg");
+$icon-add-to-cart: url("@/assets/images/shopping-cart-svgrepo-com.svg");
 @mixin icon(
   $image-name,
   $width: 24px,
@@ -71,6 +72,10 @@ $icon-cart: url("@/assets/images/icon-cart.svg");
 
 .icon-square-minus {
   @include icon($app-icon, 25px, 18px, $positionX: -589px, $positionY: -3px);
+}
+
+.icon-add-to-cart{
+  @include icon($icon-add-to-cart, 25px, 18px, $positionX: 0, $positionY: 0);
 }
 
 .dx-checkbox {

@@ -16,6 +16,18 @@ $positions: relative absolute fixed sticky;
     .w-#{$i} {
       width: #{$i}+'%';
     }
+    .mh-#{$i}-pc {
+      min-height: #{$i}+'%';
+    }
+    .mw-#{$i}-pc {
+      min-width: #{$i}+'%';
+    }
+    .h-#{$i}-pc {
+      height: #{$i}+'%';
+    }
+    .w-#{$i}-pc {
+      width: #{$i}+'%';
+    }
   }
   @if $i >=50{
     .mh-#{$i} {
@@ -26,3 +38,5 @@ $positions: relative absolute fixed sticky;
     }
   }
 }
+
+

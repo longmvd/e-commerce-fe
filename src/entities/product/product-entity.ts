@@ -1,4 +1,4 @@
-import { BaseEntity } from "..";
+import { BaseEntity } from '..';
 
 export interface Product extends BaseEntity {
   ProductName: string;
@@ -10,13 +10,51 @@ export interface Product extends BaseEntity {
   TradePrice?: number;
   Discount?: number;
   BrandName?: string;
+  ProductImages: ProductImage[];
+  ProductVersions?: ProductVersion[];
   Star?: number;
 }
 
 export interface Category extends BaseEntity {
-    CategoryName: string;
+  CategoryName: string;
 }
 
 export interface Brand extends BaseEntity {
-    BrandName: string;
+  BrandName: string;
+}
+
+export interface ProductImage extends BaseEntity {
+  Name: string;
+}
+
+export interface ProductVersion extends BaseEntity {
+  VersionName: string;
+
+  Price: number;
+
+  ThumbnailImageName: string;
+
+  TechnicalContent: string;
+
+  TechnicalContentParse: TechnicalContentItem[];
+
+  ProductStatus: number;
+
+  ReleaseYear: number;
+
+  Quantity: number;
+
+  ProductID: number;
+
+  GroupName: string;
+
+  SortOrder: number;
+
+  OrderQuantity?: number;
+}
+
+export interface TechnicalContentItem {
+  FieldName: string;
+  Caption: string;
+  Value: string;
 }

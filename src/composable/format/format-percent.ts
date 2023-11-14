@@ -1,4 +1,4 @@
-import i18n from "@/i18n";
+import i18n from '@/i18n';
 /**
  * Convert decimal number discount to string
  * @param number
@@ -14,5 +14,5 @@ export function formatDiscountPercentText(
   if (isDecimal) {
     ans = number * 100;
   }
-  return t("i18nCommon.DiscountPercent", { percent: ans });
+  return t('i18nCommon.DiscountPercent', { percent: ans });
 }

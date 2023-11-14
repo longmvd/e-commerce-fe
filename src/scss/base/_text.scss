@@ -65,6 +65,13 @@ $text-styles: (
   }
 }
 
+$text-decorations : (underline, line-through, dotted);
+
+@each $decorator in $text-decorations{
+  .text-#{$decorator} {
+    text-decoration: $decorator;
+  }
+}
 
 
 .text{

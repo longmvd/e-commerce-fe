@@ -1,7 +1,20 @@
+
 :root{
     --app-primary-color: #d70018;
     --white-color: #fff;
     --tag-bg-color: #f3f4f6;
     --text-color: $color-text;
-    --text-blur-color: #$color-text-blur;
+    --text-blur-color: #707070;
+    --app-border-color: #444;
+    --app-border-color-gray: #f2f2f2;
+    --app-border-color-dark-gray: #c9c6c6;
+    --app-gray-color: #f2f2f2;
+}
+
+$colors: ('primary': var(--app-primary-color), 'border': var(--app-border-color), 'text-blur': var(--text-blur-color));
+
+@each $color, $value in $colors{
+    .color-#{$color}{
+        color: $value; 
+    }
 }
