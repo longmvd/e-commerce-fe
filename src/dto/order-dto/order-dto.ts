@@ -1,8 +1,10 @@
+import { BaseEntity } from '@/entities';
 import { OrderItemEntity } from '@/entities/order';
 import { Payment, PaymentMethod } from '@/entities/payment/payment';
 import { Shipment } from '@/entities/shipment/shipment';
+import { OrderStatus } from '@/enums/order-enum';
 
-export interface OrderDto {
+export interface OrderDto extends BaseEntity {
   ID?: number;
 
   CustomerName: string;
@@ -18,4 +20,6 @@ export interface OrderDto {
   PaymentMethods?: PaymentMethod[];
 
   Shipment: Shipment;
+
+  Status?: OrderStatus;
 }

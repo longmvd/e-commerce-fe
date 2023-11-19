@@ -1,6 +1,6 @@
 <template>
   <div class="item-wrap p-8">
-    <div class="item-order" v-for="item in items">
+    <div class="item-order mb-8" v-for="item in items">
       <div class="flex">
         <div class="item-image">
           <img
@@ -43,9 +43,12 @@
 import host from '@/apis/configs/api-config';
 import { formatCurrencyDisplay } from '@/composable/format/price';
 import { OrderItemEntity } from '@/entities/order';
+import { useRouter } from 'vue-router';
 const props = defineProps<{
   items: OrderItemEntity[];
 }>();
+
+const router = useRouter();
 </script>
 
 <style scoped lang="scss">

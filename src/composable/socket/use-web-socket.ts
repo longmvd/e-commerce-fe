@@ -1,5 +1,6 @@
 import appSettings from '@/configs';
 import { SocketEvents } from '@/plugins/event-bus';
+import { useUserStore } from '@/store';
 import { Emitter } from 'mitt';
 import { inject } from 'vue';
 
@@ -7,7 +8,18 @@ const socket = new WebSocket(appSettings.webSocketHost);
 
 export function useWebSocketInit() {
   const bus = inject<Emitter<SocketEvents>>('_bus');
+  const userInfo = useUserStore();
   socket.onmessage = (event) => {
+    const message = event.data;
+    if (message) {
+      const messageObject = JSON.parse(message);
+      if (messageObject) {
+        if (messageObject?.EventType === 'InitSocket') {
+          userInfo.setUserID(messageObject.UserID);
+          console.log(userInfo.user);
+        }
+      }
+    }
     bus?.emit('onSocketMessage', event);
   };
 

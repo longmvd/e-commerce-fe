@@ -1,5 +1,5 @@
 <template>
-  <div class="order-form">
+  <div class="order-form" v-if="orderProcess == OrderProcess.Init">
     <div class="order-form-title mt-12 flex flex-center fs-20 text-bold">
       {{ $t('i18nCommon.OrderInformation') }}
     </div>
@@ -7,25 +7,28 @@
       ref="orderForm"
       :layout="formLayout"
       :model="formModel"
-      :rules="rules"
+      v-bind="formConfig"
     >
-      <a-form-item>
+      <a-form-item :name="['Items']">
         <order-item :items="orderItems"></order-item>
+      </a-form-item>
+      <a-form-item
+        :label="$t('i18nCommon.PaymentMethod')"
+        :label-col="formItemLayout.labelCol"
+        :wrapper-col="formItemLayout.wrapperCol"
+        :name="['Payment', 'PaymentMethodID']"
+      >
+        <a-select
+          v-model:value="formModel.Payment.PaymentMethodID"
+          v-bind="selectPaymentConfig"
+        ></a-select>
       </a-form-item>
 
       <a-form-item
         :label="$t('i18nCommon.FullName')"
         :label-col="formItemLayout.labelCol"
         :wrapper-col="formItemLayout.wrapperCol"
-        :rules="[
-          {
-            required: true,
-            message: t('i18nCommon.RequiredMessage', {
-              fieldName: t('i18nCommon.FullName'),
-            }),
-            trigger: 'change',
-          },
-        ]"
+        name="CustomerName"
       >
         <a-input
           :placeholder="$t('i18nCommon.InputValue')"
@@ -36,7 +39,7 @@
         :label="$t('i18nCommon.PhoneNumber')"
         :label-col="formItemLayout.labelCol"
         :wrapper-col="formItemLayout.wrapperCol"
-        name="PhoneNumber"
+        :name="['Shipment', 'PhoneNumber']"
       >
         <a-input
           :placeholder="$t('i18nCommon.InputValue')"
@@ -47,7 +50,7 @@
         :label="$t('i18nCommon.Email')"
         :label-col="formItemLayout.labelCol"
         :wrapper-col="formItemLayout.wrapperCol"
-        name="email"
+        name="Email"
       >
         <a-input
           :placeholder="$t('i18nCommon.InputValue')"
@@ -71,7 +74,7 @@
         :label="$t('i18nCommon.ProvinceOrCity')"
         :label-col="formItemLayout.labelCol"
         :wrapper-col="formItemLayout.wrapperCol"
-        name="city"
+        :name="['Shipment', 'City']"
       >
         <a-input
           :placeholder="$t('i18nCommon.InputValue')"
@@ -82,7 +85,7 @@
         :label="$t('i18nCommon.District')"
         :label-col="formItemLayout.labelCol"
         :wrapper-col="formItemLayout.wrapperCol"
-        name="district"
+        :name="['Shipment', 'District']"
       >
         <a-input
           :placeholder="$t('i18nCommon.InputValue')"
@@ -93,7 +96,7 @@
         :label="$t('i18nCommon.Ward')"
         :label-col="formItemLayout.labelCol"
         :wrapper-col="formItemLayout.wrapperCol"
-        name="ward"
+        :name="['Shipment', 'Ward']"
       >
         <a-input
           :placeholder="$t('i18nCommon.InputValue')"
@@ -104,7 +107,7 @@
         :label="$t('i18nCommon.Address')"
         :label-col="formItemLayout.labelCol"
         :wrapper-col="formItemLayout.wrapperCol"
-        name="address"
+        :name="['Shipment', 'Address']"
       >
         <a-input
           :placeholder="$t('i18nCommon.Street')"
@@ -117,25 +120,39 @@
         }"
       >
         <div class="flex content-end"></div>
-        <a-button type="primary" v-bind="purchaseButonConfig">
+        <a-button type="primary" v-bind="purchaseButtonConfig">
           {{ $t('i18nCommon.Purchase') }}
         </a-button>
       </a-form-item>
     </a-form>
   </div>
+  <div v-else-if="orderProcess == OrderProcess.Payment"></div>
+  <div v-else>
+    <order-result :order="orderResultModel"> </order-result>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import PurchaseApi from '@/apis/purchase/purchase-api';
+import purchaseApi, {
+  default as PurchaseApi,
+} from '@/apis/purchase/purchase-api';
+
 import { useCookie } from '@/composable/cookie/useCookie';
 import { check } from '@/composable/http/use-response';
+import { useWebSocket } from '@/composable/socket/use-web-socket';
 import { OrderDto } from '@/dto/order-dto/order-dto';
 import { OrderItemEntity } from '@/entities/order';
+import { PaymentMethod } from '@/entities/payment/payment';
+import { ModelState } from '@/enums/model-state';
+import { OrderStatus } from '@/enums/order-enum';
 import i18n from '@/i18n';
+import { useUserStore } from '@/store';
 import { ButtonProps, FormInstance, FormProps } from 'ant-design-vue';
-import { Rule } from 'ant-design-vue/lib/form/interface';
-import { computed, reactive, ref, toRaw, watch } from 'vue';
+import { SelectProps } from 'ant-design-vue/lib/vc-select';
+import { computed, reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import OrderItem from './OrderItem.vue';
+import OrderResult from './OrderResult.vue';
 const { getCookie } = useCookie();
 const formLayout = ref('vertical');
 const formItemLayout = computed(() => {
@@ -149,41 +166,123 @@ const formItemLayout = computed(() => {
 const t = i18n.global.t;
 //#region form config
 
-const orderForm = ref<FormInstance>();
+enum OrderProcess {
+  Init = 1,
+  Payment = 2,
+  Result = 3,
+}
 
-const purchaseButonConfig = reactive<ButtonProps>({
-  onClick() {
-    orderForm.value
-      ?.validate()
-      .then(() => {
-        console.log('values', formModel, toRaw(formModel));
-      })
-      .catch((error) => {
-        console.log('error', error);
-      });
+const orderForm = ref<FormInstance>();
+const orderProcess = ref<OrderProcess>(OrderProcess.Init);
+const orderResultModel = ref<OrderDto>({
+  CustomerName: '',
+  Payment: {
+    PaymentMethod: null,
+  } as any,
+  Shipment: null as any,
+  //   ID: 133,
+  //   UserID: '376d0bf2-1e76-4dd7-bc18-d69a7ee74af3',
+  //   Status: 2,
+  //   Payment: {
+  //     ID: 0,
+  //     UserID: null,
+  //     OrderID: 133,
+  //     PaymentMethodID: 1,
+  //     Status: 0,
+  //   },
+  //   Items: [
+  //     {
+  //       ID: 129,
+  //       OrderID: 133,
+  //       ProductItemID: 0,
+  //       Quantity: 1,
+  //       Unit: null,
+  //       Price: 10000,
+  //       Discount: 0.5,
+  //       ModifiedDate: '2023-11-18T21:01:41.6705844+07:00',
+  //       ModifiedBy: '',
+  //       CreatedDate: '2023-11-18T21:01:41.6702123+07:00',
+  //       CreatedBy: '',
+  //     },
+  //     {
+  //       ID: 129,
+  //       OrderID: 133,
+  //       ProductItemID: 0,
+  //       Quantity: 1,
+  //       Discount: 0.5,
+  //       Price: 10000,
+  //       ModifiedDate: '2023-11-18T21:01:41.6705844+07:00',
+  //       ModifiedBy: '',
+  //       CreatedDate: '2023-11-18T21:01:41.6702123+07:00',
+  //       CreatedBy: '',
+  //     },
+  //     {
+  //       ID: 129,
+  //       OrderID: 133,
+  //       ProductItemID: 0,
+  //       Quantity: 2,
+  //       Price: 10000,
+  //       Discount: 0.5,
+  //       ModifiedDate: '2023-11-18T21:01:41.6705844+07:00',
+  //       ModifiedBy: '',
+  //       CreatedDate: '2023-11-18T21:01:41.6702123+07:00',
+  //       CreatedBy: '',
+  //     },
+  //   ],
+  //   Shipment: {
+  //     ID: 0,
+  //     OrderID: 133,
+  //     CustomerName: null,
+  //     City: 'Hà Nội',
+  //     District: 'Hà Đông',
+  //     PhoneNumber: '0321232332',
+  //     TrackingNumber: null,
+  //     ShipDate: null,
+  //     Address: 'Km 10, Mộ Lao, Hà Đông, Hà Nội',
+  //   },
+});
+
+let paymentMethodName = '';
+
+const selectPaymentConfig = reactive<SelectProps>({
+  options: [{}],
+  fieldNames: {
+    value: 'ID',
+    label: 'Name',
   },
+  onChange(_, options) {
+    paymentMethodName = (options as PaymentMethod).Name;
+  },
+});
+
+const purchaseButtonConfig = reactive<ButtonProps>({
+  htmlType: 'submit',
+  loading: false,
+  // onClick() {
+  //   orderForm.value
+  //     ?.validate()
+  //     .then(() => {
+  //       console.log('values', formModel, toRaw(formModel));
+  //     })
+  //     .catch((error) => {
+  //       console.log('error', error);
+  //     });
+  // },
 });
 
 const formModel = reactive<OrderDto>({
   CustomerName: '',
-  Payment: {} as any,
-  Shipment: {} as any,
+  Payment: {
+    State: ModelState.Insert,
+  } as any,
+  Shipment: {
+    State: ModelState.Insert,
+  } as any,
+  State: ModelState.Insert,
 });
 
-watch(formModel, (val) => {
-  console.log(val);
-});
-const rules: Record<string, Rule[]> = {
-  // customerName: [
-  //   {
-  //     required: true,
-  //     message: t('i18nCommon.RequiredMessage', {
-  //       fieldName: t('i18nCommon.FullName'),
-  //     }),
-  //     trigger: 'change',
-  //   },
-  // ],
-  PhoneNumber: [
+const rules: Record<string, any> = {
+  CustomerName: [
     {
       required: true,
       message: t('i18nCommon.RequiredMessage', {
@@ -192,57 +291,85 @@ const rules: Record<string, Rule[]> = {
       trigger: 'change',
     },
   ],
-  email: [],
-  city: [],
-  district: [],
-  ward: [],
-  address: [],
+  Shipment: {
+    PhoneNumber: [
+      {
+        required: true,
+        message: t('i18nCommon.RequiredMessage', {
+          fieldName: t('i18nCommon.FullName'),
+        }),
+        trigger: 'change',
+      },
+    ],
+  },
+  Payment: {
+    PaymentMethodID: [
+      {
+        required: true,
+        message: t('i18nCommon.RequiredMessage', {
+          fieldName: t('i18nCommon.PaymentMethod'),
+        }),
+        trigger: 'change',
+      },
+    ],
+  },
+
+  Email: [],
+  City: [],
+  District: [],
+  Ward: [],
+  Address: [],
 };
+
+const userInfo = useUserStore();
+const router = useRouter();
 
 const formConfig = reactive<FormProps>({
   onValuesChange(e) {
     console.log(e);
   },
-  // rules: rules,
+  rules: rules,
+  onSubmit(e) {
+    console.log(e);
+  },
+
+  onFinish: async (e) => {
+    // purchaseButtonConfig.loading = true;
+    e.UserID = userInfo.user.UserID;
+    if (!e?.Shipment?.ReceiverName) {
+      e.Shipment.ReceiverName = e?.CustomerName;
+    }
+    e.Items?.forEach((item: OrderItemEntity) => {
+      item.State = ModelState.Insert;
+    });
+
+    const res = await purchaseApi.purchase(e);
+
+    const { isSuccess, data } = check(res);
+    if (isSuccess) {
+      orderResultModel.value = data?.Data;
+      switch (data?.Data?.Payment?.PaymentMethodID) {
+        case 1:
+          orderProcess.value = OrderProcess.Result;
+          orderResultModel.value.Status = OrderStatus.Success;
+          orderResultModel.value.Payment.PaymentMethod = {
+            Name: paymentMethodName,
+          };
+          break;
+        default:
+          break;
+      }
+      if (data?.Data?.Payment?.PaymentMethodID == 1) {
+      }
+      console.log(data);
+    }
+  },
   // model: formModel,
 });
 
 //#endregion
 
-const orderItems = ref<OrderItemEntity[]>([
-  {
-    Name: 'iPhone 15 128GB | Chính hãng VN/A-Đen',
-    Price: 21_990_000,
-    Unit: 'Cái',
-    Quantity: 1,
-    OrderID: 1,
-    ProductID: 2,
-  },
-  {
-    Name: 'Tai nghe chụp tai Sony WH-1000XM4 -Bạc',
-    Price: 1_990_000,
-    Unit: 'Cái',
-    Quantity: 1,
-    OrderID: 1,
-    ProductID: 2,
-  },
-  {
-    Name: 'iPhone 15 128GB | Chính hãng VN/A-Đen',
-    Price: 21_990_000,
-    Unit: 'Cái',
-    Quantity: 1,
-    OrderID: 1,
-    ProductID: 2,
-  },
-  {
-    Name: 'iPhone 15 128GB | Chính hãng VN/A-Đen',
-    Price: 21_990_000,
-    Unit: 'Cái',
-    Quantity: 1,
-    OrderID: 1,
-    ProductID: 2,
-  },
-]);
+const orderItems = ref<OrderItemEntity[]>([]);
 
 async function getData() {
   const purchase = getCookie('PurchaseRequest');
@@ -253,12 +380,34 @@ async function getData() {
 
     if (isSuccess) {
       orderItems.value = data.Data?.Items;
+      formModel.Items = data.Data?.Items;
+
+      selectPaymentConfig.options = data.Data?.PaymentMethods;
     }
   } else {
     // notify error back to previous
   }
 }
 //#region handle create order
+
+//#region checkout
+useWebSocket({
+  handleOnSocketMessage(event) {
+    console.log(event);
+    if (event.data) {
+      let checkoutUrl = JSON.parse(event.data)?.Url;
+      if (checkoutUrl) {
+        window.location.replace(checkoutUrl);
+      }
+    }
+    purchaseButtonConfig.loading = false;
+  },
+  // @ts-ignore
+  handleOnSocketError(event) {
+    // console.log(event);
+  },
+});
+//#endregion
 (async () => {
   await getData();
 })();

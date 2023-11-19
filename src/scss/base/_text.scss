@@ -74,6 +74,18 @@ $text-decorations : (underline, line-through, dotted);
 }
 
 
+$text-colors: (
+  'success': #28a745,
+  'warning': #ffc107,
+  'danger': #dc3545,
+
+);
+@each $text-color, $value in $text-colors{
+  .text-#{$text-color} {
+    color: $value;
+  }
+}
+
 .text{
   &-uppercase {
     text-transform: uppercase;

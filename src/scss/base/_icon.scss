@@ -1,6 +1,7 @@
 $app-icon: url("@/assets/images/AppIcon.svg");
 $icon-cart: url("@/assets/images/icon-cart.svg");
 $icon-add-to-cart: url("@/assets/images/shopping-cart-svgrepo-com.svg");
+$icon-ms: url("../../../src/assets/icons/ms-icon.svg");
 @mixin icon(
   $image-name,
   $width: 24px,
@@ -76,6 +77,10 @@ $icon-add-to-cart: url("@/assets/images/shopping-cart-svgrepo-com.svg");
 
 .icon-add-to-cart{
   @include icon($icon-add-to-cart, 25px, 18px, $positionX: 0, $positionY: 0);
+}
+
+.icon-success--large{
+  @include icon($icon-ms, 48px, 48px, $positionX: -704px, $positionY: -1152px);
 }
 
 .dx-checkbox {

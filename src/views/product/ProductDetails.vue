@@ -120,8 +120,6 @@
         </div>
       </div>
     </div>
-
-    {{ socketMessage.data }}
   </div>
   <e-button :config="buyButton"></e-button>
 </template>
