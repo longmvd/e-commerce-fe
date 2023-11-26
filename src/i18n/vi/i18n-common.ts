@@ -6,6 +6,10 @@ export default {
   NearYou: 'gần bạn',
   Cart: 'Giỏ hàng',
   Login: 'Đăng nhập',
+  Logout: 'Đăng xuất',
+  UserName: 'Tài khoản',
+  Password: 'Mật khẩu',
+  Register: 'Đăng ký',
   DiscountPercent: 'Giảm {percent}%',
   FullName: 'Họ và tên',
   PhoneNumber: 'Số điện thoại',
@@ -40,4 +44,8 @@ export default {
   ProductList: 'Danh sách sản phẩm',
   BackToHome: 'Trở về trang chủ',
   ViewOrder: 'Kiểm tra đơn hàng',
+
+  AddToCartSuccess: 'Thêm sản phẩm vào giỏ hàng thành công',
+  CartEmpty:
+    '<div>Giỏ hàng của bạn đang trống.</div><div>Hãy chọn thêm sản phẩm để mua sắm nhé</div>',
 };

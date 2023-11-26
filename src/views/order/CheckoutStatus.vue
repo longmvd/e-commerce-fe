@@ -28,8 +28,6 @@ const backToHomeButtonConfig = reactive<ButtonConfig>({
     router.push('/');
   },
 });
-
-console.log(isSuccess);
 </script>
 
 <style lang="scss">

@@ -58,3 +58,8 @@ export interface TechnicalContentItem {
   Caption: string;
   Value: string;
 }
+
+export interface ProductType {
+  ID?: number;
+  TypeName?: string;
+}

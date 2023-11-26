@@ -19,9 +19,11 @@ export function check(res?: AxiosResponse<any, any>) {
     case 503:
     case 504:
       message.error(t('i18nCommon.ErrorOccur'));
+      break;
     case 200:
     case 201:
       isSuccess = true;
+      break;
   }
   return { isSuccess, data };
 }

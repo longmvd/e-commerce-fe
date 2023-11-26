@@ -37,4 +37,10 @@ export class OrderItemEntity implements OrderDetail {
   Discount?: number;
 
   State?: ModelState | undefined;
+
+  //dung cho cart
+  IsLoadingIncrease?: boolean;
+  IsLoadingDecrease?: boolean;
+  IsLoadingDelete?: boolean;
+  IsActive?: boolean;
 }

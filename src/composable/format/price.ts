@@ -15,3 +15,17 @@ export function formatCurrencyDisplay(price: number) {
 
   return formatter.format(price);
 }
+
+export function CalculateTotalPriceAfterDiscount(items?: any[]) {
+  return formatCurrencyDisplay(
+    items?.reduce((total: number, item: any) => {
+      const discountedPrice = item.Price - item.Price * (item?.Discount ?? 0);
+
+      // Calculate the total price for each item (considering quantity)
+      const totalPriceForProduct = discountedPrice * item.Quantity;
+
+      // Accumulate the total price
+      return total + totalPriceForProduct;
+    }, 0) ?? 0
+  );
+}

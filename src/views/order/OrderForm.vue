@@ -11,6 +11,14 @@
     >
       <a-form-item :name="['Items']">
         <order-item :items="orderItems"></order-item>
+        <div class="cart-footer">
+          <div class="text-bold fs-18 flex content-between">
+            <span class="item-price--show text-bold">Tổng số tiền: </span>
+            <span class="item-price--show color-primary">{{
+              CalculateTotalPriceAfterDiscount(orderItems)
+            }}</span>
+          </div>
+        </div>
       </a-form-item>
       <a-form-item
         :label="$t('i18nCommon.PaymentMethod')"
@@ -136,8 +144,8 @@
 import purchaseApi, {
   default as PurchaseApi,
 } from '@/apis/purchase/purchase-api';
-
-import { useCookie } from '@/composable/cookie/useCookie';
+import { getLocalStorage } from '@/composable/clientStorage/useLocalStorage';
+import { CalculateTotalPriceAfterDiscount } from '@/composable/format/price';
 import { check } from '@/composable/http/use-response';
 import { useWebSocket } from '@/composable/socket/use-web-socket';
 import { OrderDto } from '@/dto/order-dto/order-dto';
@@ -153,7 +161,7 @@ import { computed, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import OrderItem from './OrderItem.vue';
 import OrderResult from './OrderResult.vue';
-const { getCookie } = useCookie();
+
 const formLayout = ref('vertical');
 const formItemLayout = computed(() => {
   return formLayout.value === 'horizontal'
@@ -372,9 +380,9 @@ const formConfig = reactive<FormProps>({
 const orderItems = ref<OrderItemEntity[]>([]);
 
 async function getData() {
-  const purchase = getCookie('PurchaseRequest');
+  const purchase = getLocalStorage('PurchaseRequest');
   if (purchase) {
-    let purchaseParse = JSON.parse(purchase);
+    let purchaseParse = purchase;
     const res = await PurchaseApi.initPurchase(purchaseParse);
     const { isSuccess, data } = check(res);
 
@@ -421,3 +429,4 @@ useWebSocket({
   padding: 12px;
 }
 </style>
+@/composable/clientStorage/useCookie

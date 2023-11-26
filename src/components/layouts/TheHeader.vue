@@ -9,7 +9,7 @@
       <div class="px-4">
         <menu-outlined />
       </div>
-      <p>{{ $t("i18nCommon.List") }}</p>
+      <p>{{ $t('i18nCommon.List') }}</p>
     </div>
     <div class="header-item flex-1 header__search-box">
       <a-input
@@ -35,9 +35,9 @@
           }"
         />
         <div class="item-content">
-          <div class="d-block">{{ $t("i18nCommon.CallToBuy") }}</div>
+          <div class="d-block">{{ $t('i18nCommon.CallToBuy') }}</div>
 
-          <div>{{ $t("i18nCommon.CallCenter") }}</div>
+          <div>{{ $t('i18nCommon.CallCenter') }}</div>
         </div>
       </div>
       <div class="header-item header__near-store">
@@ -50,14 +50,17 @@
           }"
         />
         <div class="item-content">
-          <div>{{ $t("i18nCommon.Store") }}</div>
+          <div>{{ $t('i18nCommon.Store') }}</div>
           <div>
-            {{ $t("i18nCommon.NearYou") }}
+            {{ $t('i18nCommon.NearYou') }}
           </div>
         </div>
       </div>
-      <div class="header-item header__delivery-tracking">tra cứu đơn hàng</div>
-      <div class="header-item header__cart">
+      <div class="header-item header__delivery-tracking">Tra cứu đơn hàng</div>
+      <div
+        class="header-item header__cart"
+        @click="user.FullName ? router.push('/cart') : router.push('/login')"
+      >
         <shopping-cart-outlined
           class="d-block px-4"
           v-bind="{
@@ -66,9 +69,10 @@
             },
           }"
         />
-        <div>{{ $t("i18nCommon.Cart") }}</div>
+        <div>{{ $t('i18nCommon.Cart') }}</div>
+        <div class="header__cart-number">{{ cartNumber }}</div>
       </div>
-      <div class="header-item header__login flex-column">
+      <div class="header-item header__login flex-column" @click="toggleLogin">
         <user-outlined
           class="d-block px-4"
           v-bind="{
@@ -77,21 +81,45 @@
             },
           }"
         />
-        <div>{{ $t("i18nCommon.Login") }}</div>
+        <div v-if="user.FullName">{{ $t('i18nCommon.Logout') }}</div>
+        <div>{{ user.FullName ? user.FullName : $t('i18nCommon.Login') }}</div>
       </div>
     </div>
   </a-layout-header>
 </template>
 <script setup lang="ts" generic="T">
+import { useUserStore } from '@/store';
 import {
+  EnvironmentOutlined,
   MenuOutlined,
   PhoneOutlined,
-  EnvironmentOutlined,
+  SearchOutlined,
   ShoppingCartOutlined,
   UserOutlined,
-  SearchOutlined,
-} from "@ant-design/icons-vue";
+} from '@ant-design/icons-vue';
+import { computed } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+const { user, logOut } = useUserStore();
+
+const cartNumber = computed(
+  () =>
+    user.Cart?.Items?.reduce(
+      (total, item) => total + (item?.Quantity ?? 0),
+      0
+    ) ?? 0
+);
+
+function toggleLogin() {
+  if (user.FullName) {
+    logOut();
+  } else {
+    router.push('/login');
+  }
+}
 </script>
+
 <style scoped lang="scss">
 .header {
   background-color: var(--app-primary-color);
@@ -121,6 +149,18 @@ import {
   }
   &__login {
     background: hsla(0, 0%, 100%, 0.2);
+  }
+  &__cart {
+    position: relative;
+    &-number {
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 0 4px;
+      border: 2px solid;
+      font-size: 16px;
+      border-radius: 50%;
+    }
   }
 }
 </style>

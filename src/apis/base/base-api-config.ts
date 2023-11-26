@@ -1,7 +1,12 @@
+import { useCookie } from '@/composable/clientStorage/useCookie';
 import axios from 'axios';
 import apiConfig from '../configs/api-config';
+const { getCookie } = useCookie();
 const api = axios.create({
   baseURL: apiConfig,
+  headers: {
+    Authorization: 'Bearer ' + getCookie('Bearer'),
+  },
 });
 
 api.interceptors.response.use(

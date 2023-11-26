@@ -121,21 +121,24 @@
       </div>
     </div>
   </div>
-  <e-button :config="buyButton"></e-button>
 </template>
 
 <script lang="ts" setup>
+import CartApi from '@/apis/cart/cart-api';
 import ProductApi from '@/apis/product/product-api';
 import { EButton, type ButtonConfig } from '@/components/controls/e-button';
-import { useCookie } from '@/composable/cookie/useCookie';
+import { useCookie } from '@/composable/clientStorage/useCookie';
+import { setLocalStorage } from '@/composable/clientStorage/useLocalStorage';
 import { formatCurrencyDisplay } from '@/composable/format/price';
 import { check } from '@/composable/http/use-response';
 import { useWebSocket } from '@/composable/socket/use-web-socket';
 import { Product, ProductVersion } from '@/entities';
+import { CartItem } from '@/entities/cart/cart-entity';
 import { PurchaseRequest } from '@/entities/purchase/purchase-entity';
 import i18n from '@/i18n';
+import { useUserStore } from '@/store';
 import { LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
-import { CarouselProps, InputNumberProps } from 'ant-design-vue';
+import { CarouselProps, InputNumberProps, message } from 'ant-design-vue';
 import { reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 const route = useRoute();
@@ -144,6 +147,7 @@ const t = i18n.global.t;
 const product = ref<Product>();
 const router = useRouter();
 const { setCookie } = useCookie();
+const { setValue } = useUserStore();
 
 //#region config
 const buyButton = reactive<ButtonConfig>({
@@ -159,7 +163,7 @@ const buyButton = reactive<ButtonConfig>({
       ],
     } as PurchaseRequest;
 
-    setCookie('PurchaseRequest', JSON.stringify(purchase), 1);
+    setLocalStorage('PurchaseRequest', purchase);
 
     router.push('/order');
   },
@@ -170,8 +174,18 @@ const addToCartButton = reactive<ButtonConfig>({
   IsShowIcon: true,
   IconName: 'ShoppingCartOutlined',
   size: 'large',
-  onClick(e) {
-    console.log(e);
+  onClick: async (e) => {
+    const item = {
+      ProductItemID: versionSelected.value?.ID as any,
+      ProductID: product.value?.ID as any,
+      Quantity: orderQuantity.value,
+    } as CartItem;
+    const res = await CartApi.addToCart(item);
+    const { isSuccess, data } = check(res);
+    if (isSuccess) {
+      message.success(t('i18nCommon.AddToCartSuccess'));
+      setValue('Cart', data.Data);
+    }
   },
 });
 
@@ -317,3 +331,4 @@ useWebSocket({
   display: none;
 }
 </style>
+@/composable/clientStorage/useCookie

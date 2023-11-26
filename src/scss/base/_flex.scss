@@ -44,9 +44,18 @@
         justify-content: space-between;
     }
 
+    &-between {
+        justify-content: space-between;
+    }
+
     &-space-around {
         justify-content: space-around;
     }
+
+    &-around {
+        justify-content: space-around;
+    }
+    
     &-end {
         justify-content: flex-end;
     }
