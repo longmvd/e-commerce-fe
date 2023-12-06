@@ -2,19 +2,23 @@
   <a-layout-sider v-model:collapsed="collapsed" collapsible>
     <div class="logo" />
     <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
-      <a-menu-item key="1">
-        <pie-chart-outlined />
-        <span>Option 1</span>
+      <a-menu-item key="dashboard">
+        <router-link :to="{ name: 'Dashboard' }">
+          <pie-chart-outlined />
+          <span>Dashboard</span>
+        </router-link>
       </a-menu-item>
-      <a-menu-item key="2">
-        <desktop-outlined />
-        <span>Option 2</span>
+      <a-menu-item key="order">
+        <router-link :to="{ name: 'OrderManagement' }">
+          <desktop-outlined />
+          <span>Đơn hàng</span>
+        </router-link>
       </a-menu-item>
       <a-sub-menu key="sub1">
         <template #title>
           <span>
             <user-outlined />
-            <span>User</span>
+            <span>Báo cáo</span>
           </span>
         </template>
         <a-menu-item key="3">Tom</a-menu-item>
@@ -25,7 +29,7 @@
         <template #title>
           <span>
             <team-outlined />
-            <span>Team</span>
+            <span>Người dùng</span>
           </span>
         </template>
         <a-menu-item key="6">Team 1</a-menu-item>
@@ -40,10 +44,20 @@
 </template>
 
 <script setup lang="ts">
+import {
+  DesktopOutlined,
+  FileOutlined,
+  PieChartOutlined,
+  TeamOutlined,
+  UserOutlined,
+} from '@ant-design/icons-vue';
 import { ref } from 'vue';
+import { useRoute } from 'vue-router';
 
 const collapsed = ref<boolean>(false);
-const selectedKeys = ref<string[]>(['1']);
+const route = useRoute();
+route.path;
+const selectedKeys = ref<string[]>([route?.params?.pathMatch?.[1]]);
 </script>
 
 <style lang="scss" scoped></style>

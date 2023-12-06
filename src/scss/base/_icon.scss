@@ -1,6 +1,6 @@
-$app-icon: url("@/assets/images/AppIcon.svg");
-$icon-cart: url("@/assets/images/icon-cart.svg");
-$icon-add-to-cart: url("@/assets/images/shopping-cart-svgrepo-com.svg");
+$app-icon: url("@/assets/icons/AppIcon.svg");
+$icon-cart: url("@/assets/icons/icon-cart.svg");
+$icon-add-to-cart: url("@/assets/icons/shopping-cart-svgrepo-com.svg");
 $icon-ms: url("../../../src/assets/icons/ms-icon.svg");
 @mixin icon(
   $image-name,

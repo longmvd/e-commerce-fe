@@ -1,7 +1,9 @@
 import { useUserStore } from '@/store';
 import { isEmpty } from 'lodash';
 import { createRouter, createWebHistory } from 'vue-router';
+import Management from './admin/management';
 import Cart from './cart/cart';
+import Forbidden from './error/403';
 import NotFound from './error/404';
 import Home from './home';
 import Login from './login/login';
@@ -17,6 +19,8 @@ export const routers = createRouter({
     ...Login,
     ...Cart,
     ...NotFound,
+    ...Management,
+    ...Forbidden,
   ],
 });
 
@@ -36,8 +40,9 @@ routers.beforeEach(async (to, from, next) => {
       next({ name: 'Forbidden' });
     } else {
       switch (to.name) {
-        // case 'AdminPage':
-        //   break;
+        case 'Management':
+          // const isAdmin = inject()
+          break;
 
         default:
           next();
