@@ -9,7 +9,7 @@
     <div
       class="product-version-wrap flex bg-white p-16 br-8 shadow-default mb-12"
     >
-      <div class="image-carousel w-50">
+      <div class="image-carousel w-40">
         <!-- <item-gallery :config="itemGalleryConfig">
           <template #items>
             <div class="image" v-for="item in product?.ProductImages">
@@ -40,13 +40,11 @@
             class="image flex content-center items-center"
             v-for="item in product?.ProductImages"
           >
-            <img
-              :src="`http://localhost:5237/api/images?filename=${item.Name}`"
-            />
+            <img :src="imageApi.getContentURL(item.Name)" :width="385" />
           </div>
         </a-carousel>
       </div>
-      <div class="product-purchase">
+      <div class="product-purchase pl-16">
         <div class="product-versions">
           <div class="versions-title text-bold mb-12">
             Chọn phiên bản sản phẩm
@@ -125,6 +123,7 @@
 
 <script lang="ts" setup>
 import CartApi from '@/apis/cart/cart-api';
+import imageApi from '@/apis/file/file-api';
 import ProductApi from '@/apis/product/product-api';
 import { EButton, type ButtonConfig } from '@/components/controls/e-button';
 import { useCookie } from '@/composable/clientStorage/useCookie';
@@ -217,8 +216,6 @@ const decreaseQuantityButtonConfig = reactive<ButtonConfig>({
 
 const carouselKey = ref(0);
 (async () => {
-  console.log(route.params);
-
   await getProductDetails(route.params.productId.toString());
 })();
 
@@ -265,10 +262,10 @@ const orderQuantity = ref(1);
 const socketMessage = reactive<{ [key: string]: any }>({});
 useWebSocket({
   handleOnSocketError(event) {
-    console.log(event);
+    // console.log(event);
   },
   handleOnSocketMessage(event) {
-    console.log(event);
+    // console.log(event);
   },
 });
 

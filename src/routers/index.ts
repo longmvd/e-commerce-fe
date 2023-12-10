@@ -1,23 +1,12 @@
 import { useUserStore } from '@/store';
 import { isEmpty } from 'lodash';
 import { createRouter, createWebHistory } from 'vue-router';
-import Cart from './cart/cart';
-import NotFound from './error/404';
-import Home from './home';
-import Login from './login/login';
-import Order from './order/order';
-import ProductDetails from './product/product-details';
+import Management from './admin/management';
+import Business from './business';
 
 export const routers = createRouter({
   history: createWebHistory(),
-  routes: [
-    ...Home,
-    ...ProductDetails,
-    ...Order,
-    ...Login,
-    ...Cart,
-    ...NotFound,
-  ],
+  routes: [...Business, ...Management],
 });
 
 routers.beforeEach(async (to, from, next) => {
@@ -36,9 +25,10 @@ routers.beforeEach(async (to, from, next) => {
       next({ name: 'Forbidden' });
     } else {
       switch (to.name) {
-        // case 'AdminPage':
-        //   break;
-
+        case 'Management':
+          // const isAdmin = inject()
+          next({ name: 'Dashboard' });
+          break;
         default:
           next();
           break;

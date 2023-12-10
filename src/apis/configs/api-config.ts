@@ -1,6 +1,6 @@
 const hostDev = 'http://localhost:5500/';
 
-const hostProduction = '';
+const hostProduction = 'http://localhost:5500/';
 
 const api = {
   development: hostDev,

@@ -1,6 +1,8 @@
 <template>
   <a-config-provider :locale="locale">
-    <the-container />
+    <router-view></router-view>
+    <router-view name="Management"></router-view>
+    <!-- <the-admin-container v-else /> -->
   </a-config-provider>
 </template>
 <script setup lang="ts">
@@ -8,11 +10,11 @@ import en_US from 'ant-design-vue/lib/locale-provider/en_US';
 import vi_VN from 'ant-design-vue/lib/locale-provider/vi_VN';
 import dayjs from 'dayjs';
 import 'dayjs/locale/vi';
-import { onMounted, ref, watch } from 'vue';
+import { computed, onMounted, provide, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import TheContainer from './components/layouts/TheContainer.vue';
+import { useRoute } from 'vue-router';
 import { useWebSocketInit } from './composable/socket/use-web-socket';
-
+import { useUserStore } from './store';
 const locale = ref(vi_VN);
 // import { useI18n } from "vue-i18n";
 
@@ -25,6 +27,15 @@ watch(
     locale.value = val == 'en' ? en_US : vi_VN;
   }
 );
+const { user } = useUserStore();
+const route = useRoute();
+
+const isAdminPage = computed(
+  () => user.Roles?.includes('ADMIN') && route.path.startsWith('/management')
+);
+
+provide('isAdminPage', isAdminPage);
+
 onMounted(() => {
   useWebSocketInit();
 });

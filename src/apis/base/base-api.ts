@@ -1,10 +1,12 @@
 import { handleError } from '@/composable/http/use-response';
+import { BaseEntity } from '@/entities';
 import { PagingRequest } from '@/entities/paging/paging-request';
+import { ModelState } from '@/enums/model-state';
 import { AxiosError } from 'axios';
 import api from './base-api-config';
 ('@/composable/http/use-response');
 
-export class BaseApi<T> {
+export class BaseApi<T = BaseEntity> {
   controller: string = '';
   protected baseApi;
 
@@ -51,6 +53,16 @@ export class BaseApi<T> {
 
   async getById(id: string) {
     return this.get(`/${id}`);
+  }
+
+  async save(record: T) {
+    (record as BaseEntity).State = ModelState.Insert;
+    return await this.post(this.controller, record);
+  }
+
+  async delete(record: T) {
+    (record as BaseEntity).State = ModelState.Delete;
+    return await this.post('', record);
   }
 }
 

@@ -12,12 +12,7 @@
       <p>{{ $t('i18nCommon.List') }}</p>
     </div>
     <div class="header-item flex-1 header__search-box">
-      <a-input
-        v-bind="{
-          bordered: true,
-          class: 'br-10',
-        }"
-      >
+      <a-input v-bind="searchBoxConfig" class="br-10">
         <template #prefix>
           <search-outlined />
         </template>
@@ -88,6 +83,7 @@
   </a-layout-header>
 </template>
 <script setup lang="ts" generic="T">
+import { SearchEvents } from '@/plugins/event-bus';
 import { useUserStore } from '@/store';
 import {
   EnvironmentOutlined,
@@ -97,12 +93,32 @@ import {
   ShoppingCartOutlined,
   UserOutlined,
 } from '@ant-design/icons-vue';
-import { computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { InputProps } from 'ant-design-vue';
+import { Emitter } from 'mitt';
+import { computed, inject } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 const router = useRouter();
+const route = useRoute();
 const { user, logOut } = useUserStore();
+const bus = inject<Emitter<SearchEvents>>('_bus');
+let debounceSearch: any = null;
 
+const searchBoxConfig: InputProps = {
+  bordered: true,
+  onInput(e) {
+    if (debounceSearch) {
+      clearTimeout(debounceSearch);
+    }
+    debounceSearch = setTimeout(() => {
+      if (e.target.value) {
+        router.push({ path: '', query: { search: e.target.value } });
+      } else {
+        router.push('/');
+      }
+    }, 2000);
+  },
+};
 const cartNumber = computed(
   () =>
     user.Cart?.Items?.reduce(

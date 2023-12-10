@@ -50,7 +50,7 @@ import { parseJwt } from '@/composable/jwt/useJwt';
 import { LoginRequest } from '@/entities/auth/auth';
 import i18n from '@/i18n';
 import { useUserStore } from '@/store';
-import { ButtonProps, FormProps } from 'ant-design-vue';
+import { ButtonProps, FormProps, notification } from 'ant-design-vue';
 import { computed, onMounted, onUpdated, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 const t = i18n.global.t;
@@ -111,28 +111,28 @@ const rules: Record<string, any> = {
 };
 
 const formConfig = reactive<FormProps>({
-  onValuesChange(e) {
-    console.log(e);
-  },
   rules: rules,
-  onSubmit(e) {
-    console.log(e);
-  },
-
   onFinish: async (e) => {
     // submitButtonConfig.loading = true;
     const res = await authApi.login(e);
     const { isSuccess, data } = check(res);
     if (isSuccess) {
-      setCookie('Bearer', data.Data.Token);
-      const userData = parseJwt(data.Data.Token);
-      setUserID(userData.UserID);
-      initData();
-      getCartInfo();
-      setValue('FullName', userData.FullName);
+      if (data.IsSuccess) {
+        const userData = parseJwt(data.Data.Token);
+        setCookie('Bearer', data.Data.Token, new Date(userData.exp * 1000));
+        setUserID(userData.UserID);
+        initData();
+        getCartInfo();
+        setValue('FullName', userData.FullName);
 
-      window.location.reload();
-      router.push('/');
+        window.location.reload();
+        router.push('/');
+      } else {
+        notification.error({
+          message: 'Tài khoản hoặc mật khẩu không tồn tại',
+          duration: 3000,
+        });
+      }
     }
   },
   // model: formModel,

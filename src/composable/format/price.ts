@@ -1,8 +1,8 @@
 import i18n from '@/i18n';
 
-export function getPriceAfterDiscount(price: number, discount: number[]) {
-  return price * discount;
-}
+// export function getPriceAfterDiscount(price: number, discount: number[]) {
+//   return price * discount;
+// }
 
 export function formatCurrencyDisplay(price: number) {
   const locale = i18n.global.locale.value;

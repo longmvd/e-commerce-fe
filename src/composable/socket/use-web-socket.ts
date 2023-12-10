@@ -27,7 +27,6 @@ export function useWebSocketInit() {
       if (messageObject) {
         if (messageObject?.EventType === 'InitSocket') {
           userInfo.setUserID(messageObject.UserID);
-          console.log(userInfo.user);
         }
       }
     }

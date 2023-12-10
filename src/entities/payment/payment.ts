@@ -11,5 +11,5 @@ export interface Payment extends BaseEntity {
 export interface PaymentMethod extends BaseEntity {
   Name: string;
 
-  Uri: string;
+  Uri?: string;
 }

@@ -1,7 +1,7 @@
 export default [
   {
     name: 'Cart',
-    path: '/cart',
+    path: 'cart',
     component: () => import('@/views/cart/TheCart.vue'),
   },
 ];
