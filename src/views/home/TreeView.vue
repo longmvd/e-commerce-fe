@@ -14,16 +14,12 @@
 </template>
 <script lang="ts" setup>
 import type { TreeSelectProps } from 'ant-design-vue';
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 const value = ref<string>();
 const treeData = ref<TreeSelectProps['treeData']>([
   { id: 1, pId: 0, value: '1', title: 'Expand to load' },
   { id: 2, pId: 0, value: '2', title: 'Expand to load' },
 ]);
-
-watch(value, () => {
-  console.log(value.value);
-});
 
 // const genTreeNode = (
 //   parentId: number,

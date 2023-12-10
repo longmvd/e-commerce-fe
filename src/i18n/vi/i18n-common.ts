@@ -1,4 +1,7 @@
 export default {
+  Action: 'Hành động',
+  SearchResult: 'Kết quả tìm kiếm',
+  ResultNotFound: 'Không tìm thấy kết quả',
   List: 'Danh mục',
   CallToBuy: 'Gọi mua hàng',
   CallCenter: '1800.1234',
@@ -48,4 +51,8 @@ export default {
   AddToCartSuccess: 'Thêm sản phẩm vào giỏ hàng thành công',
   CartEmpty:
     '<div>Giỏ hàng của bạn đang trống.</div><div>Hãy chọn thêm sản phẩm để mua sắm nhé</div>',
+
+  DeleteSuccess: 'Xóa thành công',
+  AddSuccess: 'Thêm mới thành công',
+  UpdateSuccess: 'Cập nhật thành công',
 };

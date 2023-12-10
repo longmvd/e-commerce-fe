@@ -2,11 +2,16 @@
 
 export function useCookie() {
   // Function to set a cookie
-  const setCookie = (name: string, value: string, days = 7) => {
+  const setCookie = (
+    name: string,
+    value: string,
+    expiredTime: number | Date = 7
+  ) => {
     const encodedValue = encodeURIComponent(value);
-    const expires = new Date(
-      Date.now() + days * 24 * 60 * 60 * 1000
-    ).toUTCString();
+    const expires =
+      typeof expiredTime == 'number'
+        ? new Date(Date.now() + expiredTime * 24 * 60 * 60 * 1000).toUTCString()
+        : expiredTime.toUTCString();
     document.cookie = `${name}=${encodedValue};expires=${expires};path=/`;
   };
 

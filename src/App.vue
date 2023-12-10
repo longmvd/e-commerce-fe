@@ -1,7 +1,8 @@
 <template>
   <a-config-provider :locale="locale">
-    <the-container v-if="!isAdminPage" />
-    <the-admin-container v-else />
+    <router-view></router-view>
+    <router-view name="Management"></router-view>
+    <!-- <the-admin-container v-else /> -->
   </a-config-provider>
 </template>
 <script setup lang="ts">
@@ -12,8 +13,6 @@ import 'dayjs/locale/vi';
 import { computed, onMounted, provide, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
-import TheContainer from './components/layouts/TheContainer.vue';
-import TheAdminContainer from './components/layouts/admin/TheAdminContainer.vue';
 import { useWebSocketInit } from './composable/socket/use-web-socket';
 import { useUserStore } from './store';
 const locale = ref(vi_VN);

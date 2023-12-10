@@ -334,11 +334,11 @@ const router = useRouter();
 
 const formConfig = reactive<FormProps>({
   onValuesChange(e) {
-    console.log(e);
+    // console.log(e);
   },
   rules: rules,
   onSubmit(e) {
-    console.log(e);
+    // console.log(e);
   },
 
   onFinish: async (e) => {

@@ -7,7 +7,7 @@
         <router-view></router-view>
       </a-layout-content>
       <a-layout-footer style="text-align: center">
-        Ant Design ©2018 Created by Ant UED
+        ©2023 Created by Mai Đại Long
       </a-layout-footer>
     </a-layout>
   </a-layout>

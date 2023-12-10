@@ -1,11 +1,20 @@
 <template>
   <div>
-    <item-gallery
-      v-for="itemGalleryConfig in itemGalleryConfigs"
-      :config="itemGalleryConfig"
-      @item-click="handleOpenDetails"
-    >
-    </item-gallery>
+    <transition :appear="true" :duration="1000">
+      <div v-show="!isShowSearchResults">
+        <item-gallery
+          v-for="itemGalleryConfig in itemGalleryConfigs"
+          :config="itemGalleryConfig"
+          @item-click="handleOpenDetails"
+        >
+        </item-gallery>
+      </div>
+    </transition>
+    <transition :appear="true" :duration="1000">
+      <div v-show="isShowSearchResults">
+        <product-search-result-vue @item-click="handleOpenDetails" />
+      </div>
+    </transition>
   </div>
 </template>
 <script setup lang="ts">
@@ -13,10 +22,20 @@ import ProductApi from '@/apis/product/product-api';
 import { ItemGallery, ItemGalleryConfig } from '@/components';
 import { check } from '@/composable/http/use-response';
 import { Product } from '@/entities';
-import { reactive } from 'vue';
-import { useRouter } from 'vue-router';
-const router = useRouter();
+import { computed, reactive, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import ProductSearchResultVue from '../product/ProductSearchResult.vue';
 
+const router = useRouter();
+const route = useRoute();
+const isShowSearchResults = computed(() => !!route.query?.search);
+// watch(
+//   route.query,
+//   (val) => {
+//     console.log(val);
+//   },
+//   { deep: true }
+// );
 // const itemGalleryConfig = ref<ItemGalleryConfig>({
 //   dots: false,
 //   arrows: true,
@@ -136,7 +155,9 @@ const router = useRouter();
 
 const itemGalleryConfigs = reactive<ItemGalleryConfig[]>([]);
 (async () => {
-  await getProductGallery();
+  if (!isShowSearchResults.value) {
+    await getProductGallery();
+  }
 })();
 
 function handleOpenDetails(item: Product) {
@@ -156,6 +177,7 @@ async function getProductGallery() {
   ]);
   const { isSuccess, data } = check(res);
   // itemGalleryConfig.value.items =
+
   if (isSuccess) {
     const configs = data?.Data?.map((data: any) => ({
       dots: false,
@@ -170,4 +192,12 @@ async function getProductGallery() {
 
   return res;
 }
+
+watch(isShowSearchResults, (val) => {
+  if (!val) {
+    if (!itemGalleryConfigs?.length) {
+      getProductGallery();
+    }
+  }
+});
 </script>

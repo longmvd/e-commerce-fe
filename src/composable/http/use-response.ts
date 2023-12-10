@@ -1,3 +1,4 @@
+import { ServiceResponse } from '@/entities/paging/paging-request';
 import i18n from '@/i18n';
 import { message } from 'ant-design-vue';
 import { AxiosError, AxiosResponse } from 'axios';
@@ -6,7 +7,7 @@ const t = i18n.global.t;
 
 export function check(res?: AxiosResponse<any, any>) {
   let isSuccess = false;
-  let data = res?.data;
+  let data = res?.data as ServiceResponse;
   switch (res?.status) {
     case 400:
     case 401:

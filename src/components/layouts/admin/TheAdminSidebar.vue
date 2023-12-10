@@ -2,16 +2,22 @@
   <a-layout-sider v-model:collapsed="collapsed" collapsible>
     <div class="logo" />
     <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
-      <a-menu-item key="dashboard">
+      <a-menu-item key="Dashboard">
         <router-link :to="{ name: 'Dashboard' }">
           <pie-chart-outlined />
           <span>Dashboard</span>
         </router-link>
       </a-menu-item>
-      <a-menu-item key="order">
+      <a-menu-item key="OrderManagement">
         <router-link :to="{ name: 'OrderManagement' }">
           <desktop-outlined />
           <span>Đơn hàng</span>
+        </router-link>
+      </a-menu-item>
+      <a-menu-item key="ProductManagement">
+        <router-link :to="{ name: 'ProductManagement' }">
+          <desktop-outlined />
+          <span>Sản phẩm</span>
         </router-link>
       </a-menu-item>
       <a-sub-menu key="sub1">
@@ -51,13 +57,26 @@ import {
   TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons-vue';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 const collapsed = ref<boolean>(false);
 const route = useRoute();
 route.path;
-const selectedKeys = ref<string[]>([route?.params?.pathMatch?.[1]]);
+const selectedKeys = ref<string[]>([route.name?.toString() ?? '']);
+watch(
+  () => route.name,
+  (val) => {
+    selectedKeys.value = [val?.toString() ?? ''];
+  }
+);
+
+// onMounted(() => {
+//   nextTick(() => {
+//     selectedKeys.value = [route?.params?.pathMatch?.[1]];
+//     console.log(route?.params);
+//   });
+// });
 </script>
 
 <style lang="scss" scoped></style>
