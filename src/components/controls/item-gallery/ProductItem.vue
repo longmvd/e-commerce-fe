@@ -15,7 +15,7 @@
       <div class="item__name text-bold">{{ internalItem.ProductName }}</div>
       <div class="item__price flex items-center mb-10">
         <div class="item__price--show">
-          {{ formatCurrencyDisplay(internalItem.Price) }}
+          {{ formatCurrencyDisplay(internalItem.Price ?? 0) }}
         </div>
         <div class="item__price--through ml-8" v-if="internalItem.Discount">
           {{ internalItem.Price }}
@@ -42,7 +42,7 @@ const props = defineProps<{
 const internalItem = computed(() => {
   return {
     ...props.item,
-    ImageUrl: imageApi.getContentURL(props.item.ProductImages?.[0]?.Name),
+    ImageUrl: imageApi.getContentURL(props.item.ProductImages?.[0]?.Name ?? ''),
   };
 });
 </script>

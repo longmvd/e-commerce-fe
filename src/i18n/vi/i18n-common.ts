@@ -1,6 +1,11 @@
 export default {
   Action: 'Hành động',
   SearchResult: 'Kết quả tìm kiếm',
+  Save: 'Lưu',
+  AddProduct: 'Thêm sản phẩm',
+  UpdateProduct: 'Sửa sản phẩm',
+  ProductType: 'Loại sản phẩm',
+  Brand: 'Hãng sản xuất',
   ResultNotFound: 'Không tìm thấy kết quả',
   List: 'Danh mục',
   CallToBuy: 'Gọi mua hàng',
@@ -39,6 +44,8 @@ export default {
   OrderFailed: 'Đặt hàng thất bại',
 
   ProductQuantity: 'Số lượng sản phẩm',
+  ProductName: 'Tên sản phẩm',
+  Description: 'Mô tả',
   OrderTotal: 'Tổng tiền',
   NeedToPay: 'Cần thanh toán',
   Customer: 'Khách hàng',
