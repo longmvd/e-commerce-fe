@@ -232,8 +232,6 @@ async function getProductDetails(id?: string) {
         handleSelectProductVersion(product.value.ProductVersions[0]);
       }
     }
-
-    console.log(product.value);
   }
 }
 

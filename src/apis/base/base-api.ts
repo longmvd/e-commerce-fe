@@ -51,13 +51,26 @@ export class BaseApi<T = BaseEntity> {
     return await this.post('/Paging', pagingRequest);
   }
 
+  async getAll() {
+    return this.get('');
+  }
+
   async getById(id: string) {
     return this.get(`/${id}`);
   }
 
   async save(record: T) {
-    (record as BaseEntity).State = ModelState.Insert;
     return await this.post(this.controller, record);
+  }
+
+  async add(record: T) {
+    (record as BaseEntity).State = ModelState.Insert;
+    return await this.post('', record);
+  }
+
+  async update(record: T) {
+    (record as BaseEntity).State = ModelState.Update;
+    return await this.post('', record);
   }
 
   async delete(record: T) {

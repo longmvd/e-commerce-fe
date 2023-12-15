@@ -158,7 +158,6 @@ import { useUserStore } from '@/store';
 import { ButtonProps, FormInstance, FormProps } from 'ant-design-vue';
 import { SelectProps } from 'ant-design-vue/lib/vc-select';
 import { computed, reactive, ref } from 'vue';
-import { useRouter } from 'vue-router';
 import OrderItem from './OrderItem.vue';
 import OrderResult from './OrderResult.vue';
 
@@ -330,7 +329,6 @@ const rules: Record<string, any> = {
 };
 
 const userInfo = useUserStore();
-const router = useRouter();
 
 const formConfig = reactive<FormProps>({
   onValuesChange(e) {

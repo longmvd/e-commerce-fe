@@ -1,16 +1,18 @@
 import { BaseEntity } from '..';
 
 export interface Product extends BaseEntity {
-  ProductName: string;
+  ProductName?: string;
   ImageUrl?: string;
   Description?: string;
-  Price: number;
+  Price?: number;
   FreeShipping?: boolean;
   Promotion?: string;
   TradePrice?: number;
   Discount?: number;
   BrandName?: string;
-  ProductImages: ProductImage[];
+  BrandID?: number;
+  TypeID?: number;
+  ProductImages?: ProductImage[];
   ProductVersions?: ProductVersion[];
   Star?: number;
 }

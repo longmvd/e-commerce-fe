@@ -1,7 +1,13 @@
 <template>
   <div class="product-manage-wrap">
-    <div>Quản lý sản phẩm</div>
-
+    <div class="text-bold fs-18 my-16">Quản lý sản phẩm</div>
+    <div class="table-tool-bar mb-12 flex">
+      <div class="left">
+        <a-input v-bind="searchBoxConfig">
+          <template #prefix> <search-outlined /> </template
+        ></a-input>
+      </div>
+    </div>
     <a-table
       :columns="columns"
       :data-source="dataSource"
@@ -44,12 +50,15 @@ import { Product } from '@/entities';
 import { PagingRequest } from '@/entities/paging/paging-request';
 import i18n from '@/i18n';
 import { convertPagination } from '@/utils';
+
 import {
   DeleteOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
+  SearchOutlined,
 } from '@ant-design/icons-vue';
 import {
+  InputProps,
   Modal,
   TablePaginationConfig,
   message,
@@ -62,6 +71,25 @@ const t = i18n.global.t;
 
 const router = useRouter();
 //#region config table
+
+let debounceSearch: any = null;
+const searchBoxConfig: InputProps = {
+  bordered: true,
+  onInput(e) {
+    if (debounceSearch) {
+      clearTimeout(debounceSearch);
+    }
+    debounceSearch = setTimeout(() => {
+      getData({
+        ...convertPagination(tableConfig.pagination as TablePaginationConfig),
+        QuickSearch: {
+          SearchValue: e.target.value,
+          Columns: 'ProductName,Description',
+        },
+      });
+    }, 2000);
+  },
+};
 const tableConfig = reactive<TableProps>({
   pagination: {
     total: 0,
@@ -97,17 +125,24 @@ const columns = ref<TableColumnsType>([
     key: 'ProductName',
     resizable: true,
   },
+  {
+    title: 'Mô tả',
+    width: 200,
+    dataIndex: 'Description',
+    key: 'ProductName',
+    resizable: true,
+  },
   // { title: 'Age', width: 100, dataIndex: 'age', key: 'age', fixed: 'left' },
   {
-    title: 'Column 1',
-    dataIndex: 'address',
+    title: 'Tên hãng',
+    dataIndex: 'BrandName',
     key: '1',
     width: 150,
     resizable: true,
   },
   {
-    title: 'Column 1',
-    dataIndex: 'address',
+    title: 'Loại sản phẩm',
+    dataIndex: 'TypeName',
     key: '1',
     width: 150,
     resizable: true,
@@ -158,6 +193,8 @@ const deleteButtonConfig = reactive<ButtonConfig>({
     PageSize: 20,
   });
 })();
+
+async function getDataDefault() {}
 
 async function getData(pagination: PagingRequest) {
   const res = await productApi.getPaging(pagination);
@@ -226,4 +263,10 @@ function handleResizeColumn(w: number, col: any) {
 //#endregion
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.table-tool-bar {
+  .left {
+    width: 240px;
+  }
+}
+</style>
