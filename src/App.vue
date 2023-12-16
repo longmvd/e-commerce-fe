@@ -42,7 +42,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.logo {
+import .logo {
   height: 6em;
   padding: 1.5em;
   will-change: filter;
@@ -54,4 +54,7 @@ onMounted(() => {
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #42b883aa);
 }
+</style>
+<style lang="scss">
+@import '@/scss';
 </style>

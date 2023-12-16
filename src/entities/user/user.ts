@@ -2,8 +2,9 @@ import { BaseEntity } from '..';
 import { Cart } from '../cart/cart-entity';
 
 export interface User extends BaseEntity {
-  UserID: string;
+  UserID?: string;
   FullName?: string;
+  PhoneNumber?: string;
   Email?: string;
   Cart?: Cart;
   Roles?: string;

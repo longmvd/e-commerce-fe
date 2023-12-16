@@ -1,7 +1,9 @@
 <template>
   <a-layout-header class="header flex content-space-between items-center">
     <div class="header__logo mr-12">
-      <h1 style="color: #fff">Ecommerce</h1>
+      <router-link :to="{ name: 'Home' }">
+        <h1 style="color: #fff">Ecommerce</h1>
+      </router-link>
     </div>
     <div
       class="header-item header__menu flex content-center items-center cursor-pointer"
@@ -112,7 +114,7 @@ const searchBoxConfig: InputProps = {
     }
     debounceSearch = setTimeout(() => {
       if (e.target.value) {
-        router.push({ path: '', query: { search: e.target.value } });
+        router.push({ path: '/', query: { search: e.target.value } });
       } else {
         router.push('/');
       }
@@ -142,7 +144,7 @@ function toggleLogin() {
   color: #ffff;
   line-height: 1rem;
   position: fixed;
-  z-index: 1;
+  z-index: 99;
   width: 100%;
 
   &-item {

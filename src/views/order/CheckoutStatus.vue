@@ -1,25 +1,34 @@
 <template>
   <div class="form-wrapper">
     <div class="checkout-status flex items-center content-center">
-      <div class="success" v-if="isSuccess">Thanh toán thành công</div>
-      <div class="failed" v-else>Thanh toán thất bại</div>
+      <a-result :status="isSuccess ? 'success' : 'error'" :title="title">
+        <!-- sub-title="Order number: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait." -->
+        <template #extra>
+          <div class="flex content-center">
+            <e-button :config="backToHomeButtonConfig"></e-button>
+          </div>
+        </template>
+      </a-result>
     </div>
-    <div class="flex content-center">
+    <!-- <div class="flex content-center">
       <e-button :config="backToHomeButtonConfig"></e-button>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script setup lang="ts">
 import { ButtonConfig, EButton } from '@/components';
 import i18n from '@/i18n';
-import { reactive, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
 const router = useRouter();
 
 const isSuccess = ref(JSON.parse(route.query.success as string));
+const title = computed(() =>
+  isSuccess.value ? 'Thanh toán thành công' : 'Thanh toán thất bại'
+);
 const t = i18n.global.t;
 const backToHomeButtonConfig = reactive<ButtonConfig>({
   title: t('i18nCommon.BackToHome'),

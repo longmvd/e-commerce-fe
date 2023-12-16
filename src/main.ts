@@ -1,7 +1,6 @@
 import { createApp } from 'vue';
 
 import socket from '@/plugins/web-socket/web-socket.plugin';
-import '@/scss/index.scss';
 import store from '@/store';
 import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';

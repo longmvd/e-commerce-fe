@@ -8,3 +8,7 @@ export interface BaseEntity {
   ModifiedBy?: Date;
   State?: ModelState;
 }
+
+export type ObjectType = {
+  [key: string]: any;
+};
