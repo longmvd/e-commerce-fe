@@ -88,6 +88,7 @@ const internalItem = computed(() => {
     max-width: 240px;
     box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.1),
       0 2px 6px 2px rgba(60, 64, 67, 0.15);
+    min-height: 295px;
   }
   &-percent {
     background: var(--app-primary-color);
