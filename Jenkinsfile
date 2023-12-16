@@ -9,8 +9,7 @@ pipeline {
         }
         stage('Build') {
             steps {
-                withDockerRegistry(credentialsId: 'dockerhub',
-                url: 'https://hub.docker.com/repository/docker/giadienanhkysi/ecommerce-frontend/general') {
+                withDockerRegistry(credentialsId: 'docker-hub', url: 'https://index.docker.io/v1/') {
                     sh 'docker build -t giadienanhkysi/ecommerce-frontend .'
                     sh 'docker push giadienanhkysi/ecommerce-frontend'
                 }
