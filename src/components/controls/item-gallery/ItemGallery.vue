@@ -24,12 +24,12 @@
       </div>
       <a-carousel v-bind="carouselConfig">
         <template #prevArrow>
-          <div class="custom-slick-arrow" style="left: 10px; z-index: 1">
+          <div class="custom-slick-arrow" style="left: 0px; z-index: 1">
             <left-circle-outlined />
           </div>
         </template>
         <template #nextArrow>
-          <div class="custom-slick-arrow" style="right: 10px">
+          <div class="custom-slick-arrow" style="right: 0px">
             <right-circle-outlined />
           </div>
         </template>
@@ -79,6 +79,7 @@ const carouselConfig = ref<CarouselProps>({
         slidesToShow: 2,
         slidesToScroll: 2,
         initialSlide: 2,
+        arrows: false,
       },
     },
     {
@@ -90,8 +91,8 @@ const carouselConfig = ref<CarouselProps>({
       },
     },
   ],
-  slidesToShow: 5,
-  slidesToScroll: 5,
+  slidesToShow: 6,
+  slidesToScroll: 6,
   initialSlide: 0,
   ...config,
 });

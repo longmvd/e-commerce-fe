@@ -62,4 +62,11 @@ export default {
   DeleteSuccess: 'Xóa thành công',
   AddSuccess: 'Thêm mới thành công',
   UpdateSuccess: 'Cập nhật thành công',
+
+  ReInputPassword: 'Nhập lại mật khẩu',
+  ConfirmPassword: 'Xác nhận mật khẩu',
+  ConfirmPasswordFailed: 'Mật khẩu không khớp',
+  RegisterSuccessfully: 'Đăng ký thành công',
+  HaventAccountYet: 'Chưa có tài khoản ? <a href="/register">Đăng ký</a>',
+  HaveAccount: 'Đã có tài khoản ? <a href="/login">Đăng nhập</a>',
 };
