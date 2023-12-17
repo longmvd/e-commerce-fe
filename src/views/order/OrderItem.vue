@@ -7,7 +7,7 @@
         </div>
         <div class="item-image">
           <img
-            :src="`${host}imageService/api/images?filename=${item?.ThumbnailImageName}`"
+            :src="`${host}fileService/api/images?filename=${item?.ThumbnailImageName}`"
             alt=""
             width="100"
             height="100"
