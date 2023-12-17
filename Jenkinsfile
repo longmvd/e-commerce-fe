@@ -30,11 +30,13 @@ pipeline {
                         def remoteServer = '14.225.204.198'
                         def remoteUser = 'root'
                         def remoteDir = '/ecommerce-production'
+                        def remoteName = 'ecommerce-server'
 
                         // SSH to the remote server and execute commands
                         sshCommand remote: [
                             host: remoteServer,
                             user: remoteUser,
+                            name: remoteName
                         ],
                         command: """
                                 cd ${remoteDir} &&
