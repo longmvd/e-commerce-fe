@@ -36,7 +36,7 @@ pipeline {
                         sshCommand remote: [
                             host: remoteServer,
                             user: remoteUser,
-                            name: remoteName
+                            name: remoteName,
                             allowAnyHost: true
                         ],
                         command: """
@@ -45,7 +45,6 @@ pipeline {
                                 docker-compose up -d
                                 """
                     }
-
                 }
             }
         }
