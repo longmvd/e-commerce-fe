@@ -32,7 +32,7 @@ pipeline {
                     sshagent(['ecommerce-server']) {
                         // SSH to the remote server and execute commands
                         sh """
-                           ssh -o StrictHostKeyChecking=no -l ${remoteUser} ${remoteServer} cd ${remoteDir} && docker pull giadienanhkysi/ecommerce-frontend && docker-compose up -d
+                           ssh -o StrictHostKeyChecking=no -l ${remoteUser} ${remoteServer} cd ${remoteDir} && docker pull giadienanhkysi/ecommerce-frontend && docker compose up -d
                         """
                     }
                 }
