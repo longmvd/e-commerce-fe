@@ -37,6 +37,7 @@ pipeline {
                             host: remoteServer,
                             user: remoteUser,
                             name: remoteName
+                            allowAnyHost: true
                         ],
                         command: """
                                 cd ${remoteDir} &&
@@ -44,6 +45,7 @@ pipeline {
                                 docker-compose up -d
                                 """
                     }
+
                 }
             }
         }
