@@ -25,7 +25,7 @@ pipeline {
                 script {
                     /* groovylint-disable-next-line NestedBlockDepth, SpaceAfterClosingBrace */
                     def remoteServer = '14.225.204.198'
-                    def remoteUser = 'your-ssh-username'
+                    def remoteUser = 'root'
                     def remoteDir = '/ecommerce-production'
 
                     // Start the SSH agent and add the credentials
