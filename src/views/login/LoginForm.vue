@@ -126,6 +126,7 @@ import { parseJwt } from '@/composable/jwt/useJwt';
 import { ObjectType } from '@/entities';
 import { LoginRequest, RegisterRequest } from '@/entities/auth/auth';
 import { User } from '@/entities/user/user';
+import { ErrorCode } from '@/enums';
 import i18n from '@/i18n';
 import { useUserStore } from '@/store';
 import { ButtonProps, FormProps, notification } from 'ant-design-vue';
@@ -303,9 +304,20 @@ async function register(model: User) {
   if (isSuccess) {
     notification.success({
       message: t('i18nCommon.RegisterSuccessfully'),
-      duration: 2000,
+      duration: 2,
     });
     router.push('/login');
+  } else {
+    if (
+      (data.Data as any[])?.find(
+        (validation) => validation?.ErrorCode == ErrorCode.DUPLICATED
+      )
+    ) {
+      notification.error({
+        message: t('i18nCommon.AccountExists'),
+        duration: 2,
+      });
+    }
   }
 }
 

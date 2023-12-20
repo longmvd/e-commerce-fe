@@ -23,7 +23,7 @@ export function check(res?: AxiosResponse<any, any>) {
       break;
     case 200:
     case 201:
-      isSuccess = true;
+      isSuccess = data.IsSuccess ?? false;
       break;
   }
   return { isSuccess, data };

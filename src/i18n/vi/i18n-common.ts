@@ -69,4 +69,6 @@ export default {
   RegisterSuccessfully: 'Đăng ký thành công',
   HaventAccountYet: 'Chưa có tài khoản ? <a href="/register">Đăng ký</a>',
   HaveAccount: 'Đã có tài khoản ? <a href="/login">Đăng nhập</a>',
+
+  AccountExists: 'Tài khoản, email, hoặc số điện thoại đã tồn tại',
 };
