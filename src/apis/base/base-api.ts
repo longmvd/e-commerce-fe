@@ -2,7 +2,7 @@ import { handleError } from '@/composable/http/use-response';
 import { BaseEntity } from '@/entities';
 import { PagingRequest } from '@/entities/paging/paging-request';
 import { ModelState } from '@/enums/model-state';
-import { AxiosError } from 'axios';
+import { AxiosError, AxiosRequestConfig } from 'axios';
 import api from './base-api-config';
 ('@/composable/http/use-response');
 
@@ -76,6 +76,17 @@ export class BaseApi<T = BaseEntity> {
   async delete(record: T) {
     (record as BaseEntity).State = ModelState.Delete;
     return await this.post('', record);
+  }
+
+  async deleteList(records: T[], config: AxiosRequestConfig = {}) {
+    try {
+      return await this.baseApi.delete(`${this.controller}/bulk`, {
+        data: records,
+        ...config,
+      });
+    } catch (err) {
+      return handleError(err as AxiosError);
+    }
   }
 }
 

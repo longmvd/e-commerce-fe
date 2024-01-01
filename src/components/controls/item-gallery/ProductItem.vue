@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import imageApi from '@/apis/file/file-api';
+import imageApi from '@/apis/file/image-api';
 import { formatDiscountPercentText } from '@/composable';
 import { formatCurrencyDisplay } from '@/composable/format/price';
 import { Product } from '@/entities';

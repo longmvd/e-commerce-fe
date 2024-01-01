@@ -5,7 +5,10 @@ import { AxiosError, AxiosResponse } from 'axios';
 
 const t = i18n.global.t;
 
-export function check(res?: AxiosResponse<any, any>) {
+export function check(
+  res?: AxiosResponse<any, any>,
+  isServiceResponse: boolean = true
+) {
   let isSuccess = false;
   let data = res?.data as ServiceResponse;
   switch (res?.status) {
@@ -23,7 +26,7 @@ export function check(res?: AxiosResponse<any, any>) {
       break;
     case 200:
     case 201:
-      isSuccess = data.IsSuccess ?? false;
+      isSuccess = isServiceResponse ? data.IsSuccess ?? false : true;
       break;
   }
   return { isSuccess, data };

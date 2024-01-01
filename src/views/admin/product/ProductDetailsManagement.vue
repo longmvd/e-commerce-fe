@@ -79,6 +79,27 @@
               </a-form-item>
             </a-col>
           </a-row>
+
+          <a-row>
+            <a-upload
+              list-type="picture-card"
+              :file-list="fileList"
+              @preview="handlePreview"
+              v-bind="uploadConfig"
+            >
+              <div v-if="formModel?.ProductImages?.length ?? 0">
+                <plus-outlined />
+                <div class="ant-upload-text">Upload</div>
+              </div>
+            </a-upload>
+            <a-modal
+              :visible="previewVisible"
+              :footer="null"
+              @cancel="handleCancel"
+            >
+              <img alt="example" style="width: 100%" :src="previewImage" />
+            </a-modal>
+          </a-row>
         </a-form>
       </div>
       <div>{{ formModel }}</div>
@@ -87,17 +108,21 @@
 </template>
 
 <script setup lang="ts">
+import fileApi from '@/apis/file/file-api';
+import imageApi from '@/apis/file/image-api';
 import productApi from '@/apis/product/product-api';
 import brandApi from '@/apis/product/product-brand-api';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-
 import productTypeApi from '@/apis/product/product-type-api';
 import { ButtonConfig, EButton } from '@/components';
+import { trackChanges } from '@/composable/entity/use-entity';
 import { check } from '@/composable/http/use-response';
-import { Product } from '@/entities';
+import { Product, ProductImage } from '@/entities';
 import { ModelState } from '@/enums/model-state';
 import i18n from '@/i18n';
+import { PlusOutlined } from '@ant-design/icons-vue';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import CKEditor from '@ckeditor/ckeditor5-vue';
+import type { UploadProps } from 'ant-design-vue';
 import {
   ColProps,
   FormInstance,
@@ -106,17 +131,21 @@ import {
   message,
 } from 'ant-design-vue';
 import { SelectProps } from 'ant-design-vue/lib/vc-select';
-import { h, reactive, ref, unref } from 'vue';
+import { UploadRequestError } from 'ant-design-vue/lib/vc-upload/interface';
+import { cloneDeep, remove } from 'lodash';
+import { computed, h, onUnmounted, reactive, ref, unref } from 'vue';
 import { useRoute } from 'vue-router';
 
-const props = withDefaults(
-  defineProps<{
-    mode?: ModelState;
-  }>(),
-  {
-    mode: ModelState.Insert,
-  }
-);
+// const props = withDefaults(
+//   defineProps<{
+//     mode?: ModelState;
+//   }>(),
+//   {
+//     mode: ModelState.Insert,
+//   }
+// );
+
+const mode = ref(ModelState.Insert);
 
 const t = i18n.global.t;
 
@@ -132,10 +161,14 @@ const saveButtonConfig = reactive<ButtonConfig>({
       ?.validate()
       .then(async () => {
         console.log('values', formModel, unref(formModel));
+        const requestModel = unref(formModel);
+        requestModel.ProductImages = getRequestModel();
         const res = await productApi.update(unref(formModel) as Product);
-        const { isSuccess } = check(res);
+        const { isSuccess, data } = check(res);
         if (isSuccess) {
           message.success(t('i18nCommon.AddSuccess'));
+          formModel.value = cloneDeep(data.Data);
+          formModelOrigin.value = cloneDeep(data.Data);
         }
       })
       .catch((error) => {
@@ -242,7 +275,16 @@ const rules: Record<string, any> = {
   Address: [],
 };
 
-const formModel = ref<Product>({});
+const formModel = ref<Product>({
+  ProductImages: [],
+  TypeID: undefined,
+  BrandID: undefined,
+  Description: '',
+});
+
+const formModelOrigin = ref<Product>({
+  ProductImages: [],
+});
 
 const formRowConfig = reactive<RowProps>({
   gutter: 16,
@@ -271,30 +313,145 @@ const formConfig = reactive<FormProps>({
   // model: formModel,
 });
 
+function getRequestModel() {
+  return trackChanges(
+    formModelOrigin.value.ProductImages as any[],
+    formModel.value.ProductImages as any[],
+    'Name',
+    [
+      'CreatedBy',
+      'CreatedDate',
+      'ModifiedBy',
+      'ModifiedDate',
+      'ID',
+      'ProductID',
+    ]
+  );
+}
+//#endregion
+
+//#region upload file
+const uploadConfig = reactive<UploadProps>({
+  // action: 'http://localhost:5237/api/Files/UploadFile',
+  customRequest({ file, onSuccess, onProgress, onError }) {
+    fileApi.uploadFile(file).then((res) => {
+      const { isSuccess, data } = check(res, false);
+      if (isSuccess) {
+        formModel.value.ProductImages?.push({
+          Name: data as any as string,
+          State: ModelState.Insert,
+        } as ProductImage);
+        console.log(formModel.value.ProductImages);
+      } else {
+        onError && onError({ message: 'Upload Lỗi' } as UploadRequestError, {});
+      }
+    });
+  },
+  onChange(event) {
+    if (event.file.status == 'removed') {
+      remove(
+        formModel.value.ProductImages ?? [],
+        (image) => image.Name == event.file.name
+      );
+    }
+  },
+});
+
+function getBase64(file: File) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+}
+
+const previewVisible = ref(false);
+const previewImage = ref('');
+const previewTitle = ref('');
+
+const fileList = computed<UploadProps['fileList']>({
+  get() {
+    return formModel.value.ProductImages?.map((image) => ({
+      url: imageApi.getContentURL(image.Name),
+      uid: image.Name,
+      name: image.Name,
+    }));
+  },
+  set(value) {
+    formModel.value.ProductImages = value?.map(
+      (image) =>
+        ({
+          Name: image.name,
+        } as ProductImage)
+    );
+  },
+});
+
+const handleCancel = () => {
+  previewVisible.value = false;
+  previewTitle.value = '';
+};
+const handlePreview = async (file: any) => {
+  if (!file.url && !file.preview) {
+    file.preview = (await getBase64(file.originFileObj)) as string;
+  }
+  previewImage.value = file.url || file.preview;
+  previewVisible.value = true;
+  previewTitle.value =
+    file.name || file.url.substring(file.url.lastIndexOf('/') + 1);
+};
 //#endregion
 
 (async () => {
   await getData();
 })();
+
 async function getData() {
   if (route?.params?.id) {
     const res = await productApi.getById(route.params.id as string);
     const { isSuccess, data } = check(res);
     if (isSuccess) {
-      formModel.value = data.Data;
-      getDataSelect(
-        async () => await brandApi.getAll(),
-        selectBrandConfig as any,
-        null
-      );
-      getDataSelect(
-        async () => await productTypeApi.getAll(),
-        selectTypeConfig as any,
-        null
-      );
+      if (data.Data) {
+        formModel.value = data.Data;
+        formModelOrigin.value = cloneDeep(data.Data);
+        getDataSelect(
+          async () => await brandApi.getAll(),
+          selectBrandConfig as any,
+          null
+        );
+        getDataSelect(
+          async () => await productTypeApi.getAll(),
+          selectTypeConfig as any,
+          null
+        );
+      }
     }
   }
 }
+
+async function handleDeleteTempFile(event?: Event) {
+  const tempFile =
+    getRequestModel()
+      ?.filter((data) => data.State == ModelState.Insert)
+      .map((data) => data.Name) ?? [];
+  if (tempFile.length > 0)
+    await fileApi.deleteFiles(tempFile, { httpAgent: { keepAlive: true } });
+}
+
+window.addEventListener('beforeunload', handleDeleteTempFile);
+onUnmounted(() => {
+  handleDeleteTempFile(undefined);
+  window.removeEventListener('beforeunload', handleDeleteTempFile);
+  // setTimeout(() => {
+  //   debugger;
+  //   const tempFile =
+  //     getRequestModel()
+  //       ?.filter((data) => data.State == ModelState.Insert)
+  //       .map((data) => data.Name) ?? [];
+  //   fileApi.deleteFiles(tempFile);
+  // }, 10000);
+});
 </script>
 
 <style scoped></style>

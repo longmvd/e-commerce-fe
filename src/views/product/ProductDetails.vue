@@ -123,7 +123,7 @@
 
 <script lang="ts" setup>
 import CartApi from '@/apis/cart/cart-api';
-import imageApi from '@/apis/file/file-api';
+import imageApi from '@/apis/file/image-api';
 import ProductApi from '@/apis/product/product-api';
 import { EButton, type ButtonConfig } from '@/components/controls/e-button';
 import { useCookie } from '@/composable/clientStorage/useCookie';
