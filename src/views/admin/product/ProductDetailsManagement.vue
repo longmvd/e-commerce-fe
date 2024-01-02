@@ -63,6 +63,7 @@
           <a-row>
             <a-col :span="24">
               <a-form-item
+                class="ml-28"
                 :label="t('i18nCommon.Description')"
                 name="Description"
               >
@@ -82,12 +83,13 @@
 
           <a-row>
             <a-upload
+              class="ml-28"
               list-type="picture-card"
               :file-list="fileList"
               @preview="handlePreview"
               v-bind="uploadConfig"
             >
-              <div v-if="formModel?.ProductImages?.length ?? 0">
+              <div v-if="(formModel?.ProductImages?.length ?? 9) < 8">
                 <plus-outlined />
                 <div class="ant-upload-text">Upload</div>
               </div>
@@ -102,7 +104,7 @@
           </a-row>
         </a-form>
       </div>
-      <div>{{ formModel }}</div>
+      <!-- <div>{{ formModel }}</div> -->
     </a-layout>
   </div>
 </template>
