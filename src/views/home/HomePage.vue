@@ -15,14 +15,18 @@
         <product-search-result-vue @item-click="handleOpenDetails" />
       </div>
     </transition>
+    <div class="version">Version {{ version }}</div>
   </div>
 </template>
 <script setup lang="ts">
-import ProductApi from '@/apis/product/product-api';
+import {
+  default as ProductApi,
+  default as productApi,
+} from '@/apis/product/product-api';
 import { ItemGallery, ItemGalleryConfig } from '@/components';
 import { check } from '@/composable/http/use-response';
 import { Product } from '@/entities';
-import { computed, reactive, watch } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import ProductSearchResultVue from '../product/ProductSearchResult.vue';
 
@@ -192,6 +196,15 @@ async function getProductGallery() {
 
   return res;
 }
+getProductApiVersion();
+const version = ref('');
+async function getProductApiVersion() {
+  const res = await productApi.getApiVersion();
+  const { isSuccess, data } = check(res);
+  if (isSuccess) {
+    version.value = data.Data;
+  }
+}
 
 watch(isShowSearchResults, (val) => {
   if (!val) {
@@ -201,3 +214,11 @@ watch(isShowSearchResults, (val) => {
   }
 });
 </script>
+
+<style>
+.version {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
+</style>

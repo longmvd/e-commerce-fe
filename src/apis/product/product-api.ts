@@ -9,6 +9,10 @@ export class ProductApi extends BaseApi<Product> {
   getProductCatalog(productTypes: ProductType[]) {
     return this.post('/catalog', productTypes);
   }
+
+  getApiVersion() {
+    return this.get('/version');
+  }
 }
 
 export default new ProductApi();

@@ -63,6 +63,7 @@ const internalItem = computed(() => {
   }
   &__name {
     font-size: 1rem;
+    flex-grow: 1;
   }
   &__price {
     &--show {
