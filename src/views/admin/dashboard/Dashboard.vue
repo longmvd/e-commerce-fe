@@ -1,11 +1,9 @@
 <template>
-  <div>Dash board</div>
-  <div>Dash board</div>
-  <div>Dash board</div>
-  <div>Dash board</div>
-  <div>Dash board</div>
+  <coming-soon></coming-soon>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import ComingSoon from '@/components/controls/coming-soon/ComingSoon.vue';
+</script>
 
 <style lang="scss" scoped></style>

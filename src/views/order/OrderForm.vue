@@ -340,7 +340,7 @@ const formConfig = reactive<FormProps>({
   },
 
   onFinish: async (e) => {
-    // purchaseButtonConfig.loading = true;
+    purchaseButtonConfig.loading = true;
     e.UserID = userInfo.user.UserID;
     if (!e?.Shipment?.ReceiverName) {
       e.Shipment.ReceiverName = e?.CustomerName;
