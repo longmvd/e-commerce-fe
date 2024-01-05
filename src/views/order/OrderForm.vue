@@ -407,6 +407,7 @@ useWebSocket({
       }
     }
     purchaseButtonConfig.loading = false;
+    purchaseButtonConfig.disabled = true;
   },
   // @ts-ignore
   handleOnSocketError(event) {
