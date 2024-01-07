@@ -6,12 +6,17 @@
           <a-checkbox v-model:checked="item.IsActive"></a-checkbox>
         </div>
         <div class="item-image">
-          <img
+          <a-image
+            :width="100"
+            :height="100"
+            :src="`${host}fileService/api/images?filename=${item?.ThumbnailImageName}`"
+          />
+          <!-- <img
             :src="`${host}fileService/api/images?filename=${item?.ThumbnailImageName}`"
             alt=""
             width="100"
             height="100"
-          />
+          /> -->
         </div>
         <div class="item-info ml-16 flex-1">
           <div class="item-name fs-16 text-bold">

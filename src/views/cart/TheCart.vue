@@ -30,10 +30,7 @@
 </template>
 <script lang="ts" setup>
 import CartApi from '@/apis/cart/cart-api';
-import {
-  default as ProductVersionApi,
-  default as productVersionApi,
-} from '@/apis/product/product-version-api';
+import productVersionApi from '@/apis/product/product-version-api';
 import { EButton } from '@/components';
 import { setLocalStorage } from '@/composable/clientStorage/useLocalStorage';
 import { CalculateTotalPriceAfterDiscount } from '@/composable/format/price';
@@ -44,7 +41,7 @@ import i18n from '@/i18n';
 import { useUserStore } from '@/store';
 import { ButtonProps } from 'ant-design-vue';
 import { remove } from 'lodash';
-import { reactive, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import OrderItem from '../order/OrderItem.vue';
 const { user } = useUserStore();
@@ -56,6 +53,9 @@ const t = i18n.global.t;
 //#region config
 const purchaseButtonConfig = reactive<ButtonProps>({
   loading: false,
+  disabled: computed(
+    () => cart.value?.Items?.findIndex((item) => item.IsActive) == -1
+  ) as any,
   title: t('i18nCommon.Purchase'),
   type: 'primary',
   size: 'large',
@@ -80,7 +80,7 @@ const purchaseButtonConfig = reactive<ButtonProps>({
   await getItemInfo();
 })();
 async function getItemInfo() {
-  const res = await ProductVersionApi.getPaging({
+  const res = await productVersionApi.getPaging({
     PageIndex: 1,
     PageSize: -1,
     Filter: JSON.stringify([
@@ -96,8 +96,13 @@ async function getItemInfo() {
     cart.value.Items = items.map((item: any) => {
       let cartItem = cartItems?.find((it) => item.ID == it.ID);
 
-      return { ...item, ...cartItem };
+      return {
+        ...item,
+        ...cartItem,
+        ThumbnailImageName: item.ThumbnailImageName,
+      };
     });
+    console.log(cart.value.Items);
   }
 }
 

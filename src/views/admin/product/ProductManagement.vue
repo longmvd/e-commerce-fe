@@ -11,7 +11,7 @@
     <a-table
       :columns="columns"
       :data-source="dataSource"
-      :scroll="{ x: 1500, y: 300 }"
+      :scroll="{ x: 1500, y: 400 }"
       v-bind="tableConfig"
       @resizeColumn="handleResizeColumn"
     >
