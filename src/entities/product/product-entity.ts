@@ -38,9 +38,9 @@ export interface ProductVersion extends BaseEntity {
 
   TechnicalContent: string;
 
-  TechnicalContentParse: TechnicalContentItem[];
+  TechnicalContentParse?: TechnicalContentItem[];
 
-  ProductStatus: number;
+  ProductStatus?: number;
 
   ReleaseYear: number;
 

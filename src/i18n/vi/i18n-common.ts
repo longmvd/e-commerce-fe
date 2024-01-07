@@ -3,7 +3,9 @@ export default {
   SearchResult: 'Kết quả tìm kiếm',
   Save: 'Lưu',
   AddProduct: 'Thêm sản phẩm',
+  AddProductVersion: 'Thêm phiên bản sản phẩm',
   UpdateProduct: 'Sửa sản phẩm',
+  UpdateProductVersion: 'Sửa phiên bản sản phẩm',
   ProductType: 'Loại sản phẩm',
   Brand: 'Hãng sản xuất',
   ResultNotFound: 'Không tìm thấy kết quả',
@@ -71,4 +73,8 @@ export default {
   HaveAccount: 'Đã có tài khoản ? <a href="/login">Đăng nhập</a>',
 
   AccountExists: 'Tài khoản, email, hoặc số điện thoại đã tồn tại',
+
+  ReleaseYear: 'Năm sản xuất',
+
+  Status: 'Trạng thái',
 };

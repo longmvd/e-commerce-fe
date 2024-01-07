@@ -144,9 +144,9 @@
                       <e-button
                         :config="{
                           ...editButtonConfig,
-                          // onClick() {
-                          //   handleEditProduct(record);
-                          // },
+                          onClick() {
+                            handleEditVersion(record);
+                          },
                         }"
                       />
                       <e-button
@@ -168,6 +168,12 @@
       </div>
       <!-- <div>{{ formModel }}</div> -->
     </a-layout>
+    <product-version-details
+      v-model="productVersionEditing"
+      v-if="showEditVersion"
+      @close="showEditVersion = false"
+      :mode="editVersionMode"
+    ></product-version-details>
   </div>
 </template>
 
@@ -181,7 +187,7 @@ import { ButtonConfig, EButton } from '@/components';
 import { EImage } from '@/components/controls/e-image';
 import { trackChanges } from '@/composable/entity/use-entity';
 import { check } from '@/composable/http/use-response';
-import { Product, ProductImage } from '@/entities';
+import { Product, ProductImage, ProductVersion } from '@/entities';
 import { ModelState } from '@/enums/model-state';
 import i18n from '@/i18n';
 import {
@@ -202,8 +208,9 @@ import {
 import { SelectProps } from 'ant-design-vue/lib/vc-select';
 import { UploadRequestError } from 'ant-design-vue/lib/vc-upload/interface';
 import { cloneDeep, remove } from 'lodash';
-import { computed, h, onUnmounted, reactive, ref, unref } from 'vue';
+import { computed, h, onUnmounted, reactive, ref, unref, watch } from 'vue';
 import { useRoute } from 'vue-router';
+import ProductVersionDetails from './ProductVersionDetails.vue';
 
 // const props = withDefaults(
 //   defineProps<{
@@ -224,7 +231,7 @@ const ckeditor = h(CKEditor.component);
 const addProductForm = ref<FormInstance>();
 
 const saveButtonConfig = reactive<ButtonConfig>({
-  title: t('i18nCommon.AddProduct'),
+  title: t('i18nCommon.Save'),
   onClick() {
     addProductForm.value
       ?.validate()
@@ -351,6 +358,21 @@ const formModel = ref<Product>({
   Description: '',
 });
 
+const productVersionEditing = ref();
+const showEditVersion = ref(true);
+watch(
+  () => productVersionEditing.value,
+  (val) => {
+    const productVersion = formModel.value.ProductVersions?.find(
+      (pv) => pv.ID == val.ID
+    );
+    if (productVersion) {
+      console.log(productVersion);
+
+      productVersion.ThumbnailImageName = val.ThumbnailImageName;
+    }
+  }
+);
 // ModifiedBy;
 
 // ProductName;
@@ -579,6 +601,13 @@ const handlePreview = async (file: any) => {
 (async () => {
   await getData();
 })();
+
+const editVersionMode = ref(ModelState.Update);
+function handleEditVersion(record: ProductVersion) {
+  productVersionEditing.value = record;
+
+  showEditVersion.value = true;
+}
 
 async function getData() {
   if (route?.params?.id) {

@@ -96,7 +96,7 @@ const footerBoxs = ref<FooterBox[]>([
       },
       {
         ID: 4,
-        Title: 'Xem ưu đãi Smember',
+        Title: 'Xem ưu đãi Member',
       },
       {
         ID: 5,
