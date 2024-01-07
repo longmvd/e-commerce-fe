@@ -1,6 +1,6 @@
 const hostDev = 'http://localhost:5500/';
 
-const hostProduction = '/api/';
+const hostProduction = 'http://api.maidailong.pro.vn/';
 
 const api = {
   development: hostDev,
