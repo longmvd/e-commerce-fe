@@ -110,7 +110,7 @@ function getPaymentMethod(value: any) {
 
 async function handleRetrieveOrder() {
   const res = await orderApi.retrieveOrder({ ID: orderId.value });
-  if (res?.status == 404) {
+  if (res?.status == 404 || res?.status == 405) {
     message.warning('Tính năng đang phát triển');
   } else {
     const { isSuccess, data } = check(res);
