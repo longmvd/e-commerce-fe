@@ -16,6 +16,10 @@
       </div>
     </transition>
     <div class="version">Version {{ version }}</div>
+    <popup-retrieve-order
+      v-if="showRetrieveOrder"
+      @close="showRetrieveOrder = false"
+    ></popup-retrieve-order>
   </div>
 </template>
 <script setup lang="ts">
@@ -26,13 +30,18 @@ import {
 import { ItemGallery, ItemGalleryConfig } from '@/components';
 import { check } from '@/composable/http/use-response';
 import { Product } from '@/entities';
-import { computed, reactive, ref, watch } from 'vue';
+import { HeaderClickEvent } from '@/plugins/event-bus/types/header-click-event';
+import { Emitter } from 'mitt';
+import { computed, inject, reactive, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import ProductSearchResultVue from '../product/ProductSearchResult.vue';
+import PopupRetrieveOrder from './popup/PopupRetrieveOrder.vue';
 
 const router = useRouter();
 const route = useRoute();
 const isShowSearchResults = computed(() => !!route.query?.search);
+const bus = inject<Emitter<HeaderClickEvent>>('_bus');
+
 // watch(
 //   route.query,
 //   (val) => {
@@ -213,6 +222,12 @@ watch(isShowSearchResults, (val) => {
     }
   }
 });
+//#region retrieve order
+const showRetrieveOrder = ref(false);
+bus?.on('onRetrieveOrder', (e) => {
+  showRetrieveOrder.value = true;
+});
+//#endregion
 </script>
 
 <style>

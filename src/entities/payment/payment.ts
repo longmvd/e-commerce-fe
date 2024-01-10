@@ -6,6 +6,7 @@ export interface Payment extends BaseEntity {
   PaymentMethodID: number;
   Status: number;
   PaymentMethod: PaymentMethod;
+  Total?: number;
 }
 
 export interface PaymentMethod extends BaseEntity {

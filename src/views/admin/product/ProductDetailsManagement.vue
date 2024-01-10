@@ -359,7 +359,7 @@ const formModel = ref<Product>({
 });
 
 const productVersionEditing = ref();
-const showEditVersion = ref(true);
+const showEditVersion = ref(false);
 watch(
   () => productVersionEditing.value,
   (val) => {

@@ -77,4 +77,11 @@ export default {
   ReleaseYear: 'Năm sản xuất',
 
   Status: 'Trạng thái',
+
+  Payment: {
+    Pending: 'Chờ thanh toán',
+    Success: 'Thành công',
+    Failed: 'Thất bại',
+    Refund: 'Đã hoàn tiền',
+  },
 };

@@ -53,7 +53,12 @@
           </div>
         </div>
       </div>
-      <div class="header-item header__delivery-tracking">Tra cứu đơn hàng</div>
+      <div
+        class="header-item header__delivery-tracking"
+        @click="handleRetrieveOrder"
+      >
+        Tra cứu đơn hàng
+      </div>
       <div
         class="header-item header__cart"
         @click="user.FullName ? router.push('/cart') : router.push('/login')"
@@ -85,7 +90,7 @@
   </a-layout-header>
 </template>
 <script setup lang="ts" generic="T">
-import { SearchEvents } from '@/plugins/event-bus';
+import { HeaderClickEvent } from '@/plugins/event-bus/types/header-click-event';
 import { useUserStore } from '@/store';
 import {
   EnvironmentOutlined,
@@ -99,11 +104,10 @@ import { InputProps } from 'ant-design-vue';
 import { Emitter } from 'mitt';
 import { computed, inject } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-
 const router = useRouter();
 const route = useRoute();
 const { user, logOut } = useUserStore();
-const bus = inject<Emitter<SearchEvents>>('_bus');
+const bus = inject<Emitter<HeaderClickEvent>>('_bus');
 let debounceSearch: any = null;
 
 const searchBoxConfig: InputProps = {
@@ -135,6 +139,10 @@ function toggleLogin() {
   } else {
     router.push('/login');
   }
+}
+
+function handleRetrieveOrder(event: Event) {
+  bus?.emit('onRetrieveOrder', event);
 }
 </script>
 
